@@ -9,8 +9,7 @@ function    h = histImage(img)
 %                            Do NOT loop over the image (see note below). You may use Matlab function find.
 %                            Do NOT use the matlab function hist. 
 h = zeros(1, 256);
-nonZeroIndexes = find(img);
-for idx = 1:numel(nonZeroIndexes)
-    disp(img(nonZeroIndexes(idx)))
-    h(img(nonZeroIndexes(idx))) = h(img(nonZeroIndexes(idx))) + 1;
+for i=0:255
+    count = size(find(img==i));
+    h(i+1) = count(1);
 end
