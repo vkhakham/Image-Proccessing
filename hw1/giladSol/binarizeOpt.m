@@ -18,7 +18,7 @@ function    [bimg,T] = binarizeOpt(img)
 %DELETE a
 %Use optimalQuantization with N=1. 
 %T is calculated from the qi values.
-img = readImage('lighthouse.tif');
+%img = readImage('lighthouse.tif');
 %showImage(img);
 T=127;
 %DELETE a

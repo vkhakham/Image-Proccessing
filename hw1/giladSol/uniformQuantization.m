@@ -14,14 +14,14 @@ function [imgNbit,Qvals] = uniformQuantization(img8bit,N)
 
 %DELETE a
 %This is a two line function (one line for each of the output variables).
-img8bit = readImage('lighthouse.tif');
-showImage(img8bit);
-N=1;
+% img8bit = readImage('lighthouse.tif');
+% showImage(img8bit);
+% N=1;
 %DELETE a 
 
 imgNbit = floor(img8bit / 2^(8-N)) * 2^(8-N) + 2^(8-N-1);
 Qvals   = (0:(2^N-1)) * (2^(8-N)) + 2^(8-N-1);
 
 %DELETE b 
-showImage(imgNbit);
+%showImage(imgNbit);
 %DELETE b

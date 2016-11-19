@@ -16,13 +16,13 @@ function bimg = binarize(img,T)
 
 %DELETE a
 %1 Line of Matlab code. Do NOT loop over the image – use matrix operations. 
-img = readImage('lighthouse.tif');
-showImage(img);
-T=127;
+% img = readImage('lighthouse.tif');
+% showImage(img);
+% T=127;
 %DELETE a
 
 bimg = (img > T) * 255;
 
 %DELETE b 
-showImage(bimg);
+% showImage(bimg);
 %DELETE b
