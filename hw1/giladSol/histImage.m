@@ -1,5 +1,8 @@
 function h = histImage(img)
-
+%
+%function h = histImage(img)
+%This routine builds the histogram of image img.
+%
 %Input : img - a grayscale image in the range [0..255] 
 %
 %Output: h - image histogram. An array 1x256 such that 
