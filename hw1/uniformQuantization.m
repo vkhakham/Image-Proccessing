@@ -8,18 +8,5 @@
 %             Qvals  - a vector of length 2^N where each entry i contains the 8 bit gray value qi. 
 %     Method: Uses Uniform Quantization to create the N bit image. 
 %             This is a two line function (one line for each of the output variables).
-Qvals = zeros(1,2^N);
-imgNbit = zeros(size(img8bit));
-
-step = 2^(8-N);
-for idx = 1:numel(Qvals)
-    Qvals(idx) = step * idx - step/2 ;
-end
-
-nonZeroIndexes = find(img8bit);
-for idx = 1:numel(nonZeroIndexes)
-    indexQval = floor(img8bit(nonZeroIndexes(idx)) / step) + 1;
-    imgNbit(nonZeroIndexes(idx)) = Qvals(indexQval);
-end
-
-Qvals
+imgNbit = floor(img8bit / 2^(8-N)) * 2^(8-N) + 2^(8-N-1);
+Qvals = (0:(2^N-1)) * (2^(8-N)) + 2^(8-N-1);
