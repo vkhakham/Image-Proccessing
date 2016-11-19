@@ -1,0 +1,23 @@
+function bimg = binarize(img,T) 
+
+% function bimg = binarize(img,T) 
+% (file name is accordingly binarize.m ) 
+% Given an image and a threshold value returns a binary image resulting from global thresholding.
+% 
+% Input:  img - a grayscale image in the range [0..255] 
+%         T -  the threshold value in the range [0 ..255]. 
+% 
+% Output: bimg - a binary image, represented as a grayscale
+%         image with values 0 and 255.
+% 
+% Method: Sets all grayscale values in the image greater than
+%         the threshold T to 255 and all grayscale values
+%         smaller or equal to T to 0. 
+
+%DELETE a
+%This is a two line function (one line for each of the output variables).
+img8bit = readImage('lighthouse.tif');
+showImage(img8bit);
+N=1;
+%DELETE a
+1 Line of Matlab code. Do NOT loop over the image – use matrix operations. 
