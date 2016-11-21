@@ -63,11 +63,12 @@ end
 disp(['E after first calc: ', num2str(E)]);
 
 Eold = inf(1);
-infCounter = 1;
+maxLoops = 5;
+loopCounter = 1;
 %main loop. try to get lower E and stops when reaching local min.
-while(Eold > E && infCounter<=5)
+while(Eold > E && loopCounter<=maxLoops)
     disp('*************************************');
-    disp(['iter number:',num2str(infCounter)]);
+    disp(['iter number:',num2str(loopCounter)]);
     Eold = E;
     cloneZiVector = ziVector;
     cloneQiVector = qiVector;
@@ -100,7 +101,7 @@ while(Eold > E && infCounter<=5)
     end
     disp(['E after recalc: ', num2str(E), ' and Eold is:' , num2str(Eold)]);
     
-    infCounter = infCounter + 1;
+    loopCounter = loopCounter + 1;
 end
 disp('--------------------------------------------');
 disp('--------------------------------------------');
