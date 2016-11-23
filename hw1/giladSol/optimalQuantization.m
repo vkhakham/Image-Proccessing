@@ -7,25 +7,14 @@ function    [imgNbit, Qvals] = optimalQuantization(img8bit,N)
 % Input:  img8bit - a grayscale image in the range [0..255] 
 %         N – number of bits for output image. N<8.
 %         
-% Output: imgNbit - a grayscale image with maximum 2N different values
-%         Qvals  - a vector of length 2N where each entry i contains the 8 bit gray value qi. 
+% Output: imgNbit - a grayscale image with maximum 2^N different values
+%         Qvals  - a vector of length 2^N where each entry i contains the 8 bit gray value q(i-1). 
 %         
 % Method: TODO
 
 %DELETE a
-% Uses the iterative Loyd-Max algorithm for Optimal Quantization as described in class to perform quantization.
-%  - Use the histogram of img8bit as the graylevel probability distribution.
-%  - Use the Loyd-Max algorithm to compute the 2N+1 Zi values and the 2N qi values. 
-%  - After computing the optimal qi and Zi values:
-%  - - create the N bit image by mapping all pixels with gray value in the range [Zi .. Zi+1] to the value qi.
-%  - - Use reasonable guess for initial qi or Zi values. 
-%  - - Make sure that Z(0) and Z(2N+1) are 'anchored' to the bounds of the gray value range (0 and 255). 
-%  - - Be careful re stopping condition of the algorithm. Since data is digital (not continuous)
-%  - - process might converge to toggling state and not actual minima.
-% Note: In class input z values were assumed continuous and thus integral over z values was used
-%       in the computation. In our case z values are integers 0..255 and thus sum rather than integral is used.
-img8bit = readImage('lighthouse.tif');
-N = 1;
+%img8bit = readImage('lighthouse.tif');
+%N = 1;
 %DELETE a
 
 P = histImage(img8bit); %histogram of img8bit
@@ -35,75 +24,47 @@ disp('initial uniformly ziVector: ');
 disp(ziVector);
 
 
-qiVector = (0:2^(N-1));
+qiVector = (0:(2^N)-1);
 disp('initial empty qiVector: ');
 disp(qiVector);
 
 %calculates Qi's
-for i=1 : length(qiVector)
-    sumOfUp = 0;
-    sumOfDown = 0;
-    for j=ziVector(i) : ziVector(i+1)-1 
-        sumOfUp = sumOfUp + j * P(j+1);%todo - think of value 0
-        sumOfDown = sumOfDown + P(j+1);
-    end
-    qiVector(i) = floor(sumOfUp / sumOfDown);
-end
-
+qiVector = calcQiByZi(ziVector, qiVector, P);
 disp('qiVector after first calc: ');
 disp(qiVector);
 
 %calculates Error
-E = 0;
-for i=1 : length(qiVector)
-    for j=ziVector(i) : ziVector(i+1)-1 
-        E = E + P(j+1)*((j-qiVector(i))^2);
-    end
-end
+E = calcE(ziVector, qiVector, P);
 disp(['E after first calc: ', num2str(E)]);
 
 Eold = inf(1);
-maxLoops = 5;
+maxLoops = 50;
 loopCounter = 1;
-%main loop. try to get lower E and stops when reaching local min.
+%main loop. try to get lower E and stops if reaching local min or maxLoops
 while(Eold > E && loopCounter<=maxLoops)
     disp('*************************************');
     disp(['iter number:',num2str(loopCounter)]);
+    
     Eold = E;
-    cloneZiVector = ziVector;
-    cloneQiVector = qiVector;
-    %calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
-    for i=2 : length(ziVector) - 1
-        ziVector(i) = (qiVector(i-1) + qiVector(i)) / 2;
-    end
+    cloneZiVector = ziVector;%saving old values
+    cloneQiVector = qiVector;%saving old values
+    
+    %re-calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
+    ziVector = calcZiByQi(ziVector, qiVector);
     disp('ziVector after recalc: ');
     disp(ziVector);
     
-    %calculates Qi's
-    for i=1 : length(qiVector)
-        sumOfUp = 0;
-        sumOfDown = 0;
-            for j=ziVector(i) : ziVector(i+1)-1 
-                sumOfUp = sumOfUp + j * P(j+1);%todo - think of value 0
-                sumOfDown = sumOfDown + P(j+1);
-            end
-        qiVector(i) = floor(sumOfUp / sumOfDown);
-    end
+    %re-calculates Qi's
+    qiVector = calcQiByZi(ziVector, qiVector, P);
     disp('qiVector after recalc: ');
     disp(qiVector);
     
-    %calculates Error
-    E = 0;
-    for i=1 : length(qiVector)
-        for j=ziVector(i) : ziVector(i+1)-1 
-            E = E + P(j+1)*((j-qiVector(i))^2);
-        end
-    end
+    %re-calculates Error
+    E = calcE(ziVector, qiVector, P);
     disp(['E after recalc: ', num2str(E), ' and Eold is:' , num2str(Eold)]);
     
     loopCounter = loopCounter + 1;
 end
-disp('--------------------------------------------');
 disp('--------------------------------------------');
 disp('final results: ');
 disp('ziVector: ');
@@ -113,6 +74,59 @@ disp(cloneQiVector);
 disp('Error: ');
 disp(Eold);
 
+%insert Qi's into original image
+imgNbit = calcNewNbitImg(img8bit, cloneZiVector, cloneQiVector);%TODO change to matlab instead of loop
+showImage(imgNbit);
+Qvals = cloneQiVector;
+end
 
-imgNbit = 0;
-Qvals = 0 ;
+function [newQi] = calcQiByZi(oldZi, oldQi, P)
+%calculates Qi's using Zi vector and P the histogram of original image
+newQi = oldQi; %create newQi the same size to avoid dynamic allocation
+for i=1 : length(newQi)
+    sumOfUp = 0;
+    sumOfDown = 0;
+    for j=oldZi(i) : oldZi(i+1)-1 
+        sumOfUp = sumOfUp + j * P(j+1);
+        sumOfDown = sumOfDown + P(j+1);
+    end
+    newQi(i) = floor(sumOfUp / sumOfDown);
+end
+
+end
+
+function [E] = calcE(ziVector, qiVector, P)
+%calculates Error
+E = 0;
+for i=1 : length(qiVector)
+    for j=ziVector(i) : ziVector(i+1)-1 
+        E = E + P(j+1)*((j-qiVector(i))^2);
+    end
+end
+end
+
+function [newZi] = calcZiByQi(oldZi, oldQi)
+%calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
+newZi = oldZi;
+for i=2 : length(newZi) - 1
+    newZi(i) = floor((oldQi(i-1) + oldQi(i)) / 2);
+end
+end
+
+function [imgNbit] = calcNewNbitImg(img8bit, ziVector, qiVector)
+%insert Qi's into original image
+imgNbit = img8bit;
+for i=1 : 256
+    for j=1 : 256
+        for k=1 : length(ziVector)-1
+            if(imgNbit(i,j) >= ziVector(k) && imgNbit(i,j) < ziVector(k+1))
+                imgNbit(i,j) = qiVector(k);
+                break;
+            end
+        end
+    end
+end
+end
+
+
+
