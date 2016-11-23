@@ -23,3 +23,10 @@
 % You can use tic and toc to measure run time. 
 % When does the advantage in run time kick in?
 % You can plot ratio of run times as a function of window size to make your point.
+
+
+
+
+%TODO
+%check where result can be double but used for index(must be int)
+%check all divisions for x/0

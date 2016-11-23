@@ -46,8 +46,7 @@ while(Eold > E && loopCounter<=maxLoops)
     disp(['iter number:',num2str(loopCounter)]);
     
     Eold = E;
-    cloneZiVector = ziVector;%saving old values
-    cloneQiVector = qiVector;%saving old values
+    cloneQiVector = qiVector;%saving old values just of Qi. Zi will be correct cuase calculated from previous Qi
     
     %re-calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
     ziVector = calcZiByQi(ziVector, qiVector);
@@ -68,14 +67,14 @@ end
 disp('--------------------------------------------');
 disp('final results: ');
 disp('ziVector: ');
-disp(cloneZiVector);
+disp(ziVector);
 disp('qiVector: ');
 disp(cloneQiVector);
 disp('Error: ');
 disp(Eold);
 
 %insert Qi's into original image
-imgNbit = calcNewNbitImg(img8bit, cloneZiVector, cloneQiVector);%TODO change to matlab instead of loop
+imgNbit = calcNewNbitImg(img8bit, ziVector, cloneQiVector);%TODO change to matlab instead of loop
 %showImage(imgNbit);
 Qvals = cloneQiVector;
 end
@@ -89,6 +88,9 @@ for i=1 : length(newQi)
     for j=oldZi(i) : oldZi(i+1)-1 
         sumOfUp = sumOfUp + j * P(j+1);
         sumOfDown = sumOfDown + P(j+1);
+    end
+    if(sumOfDown == 0)
+        sumOfDown = 1;
     end
     newQi(i) = floor(sumOfUp / sumOfDown);
 end
@@ -116,8 +118,9 @@ end
 function [imgNbit] = calcNewNbitImg(img8bit, ziVector, qiVector)
 %insert Qi's into original image
 imgNbit = img8bit;
-for i=1 : 256
-    for j=1 : 256
+[rows,cols] = size(img8bit);
+for i=1 : rows
+    for j=1 : cols
         for k=1 : length(ziVector)-1
             if(imgNbit(i,j) >= ziVector(k) && imgNbit(i,j) < ziVector(k+1))
                 imgNbit(i,j) = qiVector(k);
