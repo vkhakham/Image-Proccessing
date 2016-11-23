@@ -14,11 +14,10 @@ function [bimg] = binarizeOptAdaptive(img,winsize)
 %         in winsize X winsize window around the pixel. Apply optimalQuantization with N=1 in each window.
 %         If window exceeds image boundaries – use only pixels within the image boundaries.
 
-%DELETE a
-%Note: time consuming when winsize is small. Use large winsize. 
+%DELETE
+winsize = 11;
 img = readImage('lighthouse.tif');
-%showImage(img);
-winsize = 1;
-%DELETE a
+
+
       
 bimg = img;

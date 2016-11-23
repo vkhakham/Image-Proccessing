@@ -12,13 +12,10 @@ function h = histImage(img)
 %Method: Counts the number of pixels with grayscale 
 %        value i in the range [0 .. 255]. 
 
-%DELETE
-%img = readImage('barbarasmall.tif');
-%DELETE
-
 h = zeros(1,256);
 for i=0:255
     h(i+1) = length( find(img == i) );
+end
 end
 
 

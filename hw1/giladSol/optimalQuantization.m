@@ -76,7 +76,7 @@ disp(Eold);
 
 %insert Qi's into original image
 imgNbit = calcNewNbitImg(img8bit, cloneZiVector, cloneQiVector);%TODO change to matlab instead of loop
-showImage(imgNbit);
+%showImage(imgNbit);
 Qvals = cloneQiVector;
 end
 
