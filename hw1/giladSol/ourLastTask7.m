@@ -28,5 +28,6 @@
 
 
 %TODO
-%check where result can be double but used for index(must be int)
+%check where result can be double but used for index(must be int)- use
+%round not floor
 %check all divisions for x/0

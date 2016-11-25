@@ -13,70 +13,83 @@ function    [imgNbit, Qvals] = optimalQuantization(img8bit,N)
 % Method: TODO
 
 %DELETE a
-%img8bit = readImage('lighthouse.tif');
-%N = 1;
+% img8bit = readImage('lighthouse.tif');
+% img8bit = [206 206 208; 200 205 204; 205 200 202];
+% img8bit = [1 1 1; 5 5 5; 3 3 3];
+% N = 1;
 %DELETE a
 
-P = histImage(img8bit); %histogram of img8bit
+%histogram of img8bit
+P = histImage(img8bit); 
 
-ziVector = (0:(2^N)) * (2^(8-N));   %spread the Zi uniformly as first guess
-disp('initial uniformly ziVector: ');
-disp(ziVector);
+%spread the Zi uniformly as first guess
+ziVector = (0:(2^N)) * (2^(8-N));
+% disp('initial uniformly ziVector: ');
+% disp(ziVector);
 
-
+%init size of QI's
 qiVector = (0:(2^N)-1);
-disp('initial empty qiVector: ');
-disp(qiVector);
+% disp('initial empty qiVector: ');
+% disp(qiVector);
 
 %calculates Qi's
-qiVector = calcQiByZi(ziVector, qiVector, P);
-disp('qiVector after first calc: ');
-disp(qiVector);
+qiVector = calcQiByZi(ziVector, qiVector, P);%first calc
+% disp('qiVector after first calc: ');
+% disp(qiVector);
 
 %calculates Error
 E = calcE(ziVector, qiVector, P);
-disp(['E after first calc: ', num2str(E)]);
+% disp(['E after first calc: ', num2str(E)]);
 
-Eold = inf(1);
-maxLoops = 50;
+trioChanged = true;%will tell if there was improvment in this iteration.
+maxLoops = 500;
 loopCounter = 1;
+
 %main loop. try to get lower E and stops if reaching local min or maxLoops
-while(Eold > E && loopCounter<=maxLoops)
-    disp('*************************************');
-    disp(['iter number:',num2str(loopCounter)]);
-    
-    Eold = E;
-    cloneQiVector = qiVector;%saving old values just of Qi. Zi will be correct cuase calculated from previous Qi
-    
+while(trioChanged==true && loopCounter<=maxLoops)
+%     disp('*************************************');
+%     disp(['iter number:',num2str(loopCounter)]);
+   
     %re-calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
-    ziVector = calcZiByQi(ziVector, qiVector);
-    disp('ziVector after recalc: ');
-    disp(ziVector);
+    tempZiVector = calcZiByQi(ziVector, qiVector);
+%     disp('tempZiVector after recalc: ');
+%     disp(tempZiVector);
     
     %re-calculates Qi's
-    qiVector = calcQiByZi(ziVector, qiVector, P);
-    disp('qiVector after recalc: ');
-    disp(qiVector);
+    tempQiVector = calcQiByZi(tempZiVector, qiVector, P);
+%     disp('tempQiVector after recalc: ');
+%     disp(tempQiVector);
     
     %re-calculates Error
-    E = calcE(ziVector, qiVector, P);
-    disp(['E after recalc: ', num2str(E), ' and Eold is:' , num2str(Eold)]);
+    tempE = calcE(tempZiVector, tempQiVector, P);
+%     disp(['tempE after recalc: ', num2str(tempE), ' and Eold is:' , num2str(E)]);
     
+    %if E>temp -> improved ->continue
+    %if E==temp -> if Qi changed or Zi changed, we might be fixind empty slot(Zi to Zi+1 is empty) ->continue
+    if(E >= tempE && (~isequal(tempQiVector,qiVector) || ~isequal(tempZiVector,ziVector)))
+        E = tempE;
+        qiVector = tempQiVector;
+    else
+        trioChanged = false;
+    end
+    
+    ziVector = tempZiVector;%Zi need to be calced anyway from Qi
     loopCounter = loopCounter + 1;
 end
-disp('--------------------------------------------');
-disp('final results: ');
-disp('ziVector: ');
-disp(ziVector);
-disp('qiVector: ');
-disp(cloneQiVector);
-disp('Error: ');
-disp(Eold);
+
+% disp('--------------------------------------------');
+% disp('final results: ');
+% disp('ziVector: ');
+% disp(ziVector);
+% disp('qiVector: ');
+% disp(qiVector);
+% disp('Error: ');
+% disp(E);
 
 %insert Qi's into original image
-imgNbit = calcNewNbitImg(img8bit, ziVector, cloneQiVector);%TODO change to matlab instead of loop
+imgNbit = calcNewNbitImg(img8bit, ziVector, qiVector);%TODO change to matlab instead of loop
 %showImage(imgNbit);
-Qvals = cloneQiVector;
+Qvals = qiVector;
 end
 
 function [newQi] = calcQiByZi(oldZi, oldQi, P)
@@ -90,9 +103,14 @@ for i=1 : length(newQi)
         sumOfDown = sumOfDown + P(j+1);
     end
     if(sumOfDown == 0)
-        sumOfDown = 1;
+        if (i == 1)
+            newQi(i) = oldZi(i+1);
+        else
+            newQi(i) = oldZi(i);
+        end
+    else
+        newQi(i) = round(sumOfUp / sumOfDown);
     end
-    newQi(i) = floor(sumOfUp / sumOfDown);
 end
 
 end
@@ -111,7 +129,7 @@ function [newZi] = calcZiByQi(oldZi, oldQi)
 %calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
 newZi = oldZi;
 for i=2 : length(newZi) - 1
-    newZi(i) = floor((oldQi(i-1) + oldQi(i)) / 2);
+    newZi(i) = round((oldQi(i-1) + oldQi(i)) / 2);
 end
 end
 
