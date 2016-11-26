@@ -17,7 +17,7 @@ function [bimg] = binarizeOptAdaptive(img,winsize)
 %DELETE
 winsize = 51;
 img = readImage('lighthouse.tif');
-showImage(img);
+% showImage(img);
 %DELETE
 
 

@@ -14,10 +14,10 @@ function    [imgNbit, Qvals] = optimalQuantization(img8bit,N)
 %           diffrent color with the last color cloned till QVals length is 2^n
 
 %DELETE a
-img8bit = readImage('lighthouse.tif');
+% img8bit = readImage('lighthouse.tif');
 %img8bit = [206 206 208; 200 205 204; 205 200 202]; %run this win N=4 and see where the fix is going wrong
 % img8bit = [1 1 1; 5 5 5; 3 3 3];
-N = 1;
+% N = 1;
 %DELETE a
 
 %histogram of img8bit
@@ -49,17 +49,17 @@ if(totalDiffrentColors > 2^N)
         end
     end
     
-    disp('initial uniformly ziVector(after removing empty parts): ');
-    disp(ziVector);
+%     disp('initial uniformly ziVector(after removing empty parts): ');
+%     disp(ziVector);
 
     %calculates Qi's
     qiVector = calcQiByZi(ziVector, P);%first calc
-    disp('qiVector after first calc: ');
-    disp(qiVector);
+%     disp('qiVector after first calc: ');
+%     disp(qiVector);
 
     %calculates Error
     E = calcE(ziVector, qiVector, P);
-    disp(['E after first calc: ', num2str(E)]);
+%     disp(['E after first calc: ', num2str(E)]);
 
     trioChanged = true;%will tell if there was improvment in this iteration.
     maxLoops = 500;
@@ -67,22 +67,22 @@ if(totalDiffrentColors > 2^N)
 
     %main loop. try to get lower E and stops if reaching local min or maxLoops
     while(trioChanged==true && loopCounter<=maxLoops)
-        disp('*************************************');
-        disp(['iter number:',num2str(loopCounter)]);
+%         disp('*************************************');
+%         disp(['iter number:',num2str(loopCounter)]);
 
         %re-calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
         tempZiVector = calcZiByQi(qiVector);
-        disp('tempZiVector after recalc: ');
-        disp(tempZiVector);
+%         disp('tempZiVector after recalc: ');
+%         disp(tempZiVector);
 
         %re-calculates Qi's
         tempQiVector = calcQiByZi(tempZiVector, P);
-        disp('tempQiVector after recalc: ');
-        disp(tempQiVector);
+%         disp('tempQiVector after recalc: ');
+%         disp(tempQiVector);
 
         %re-calculates Error
         tempE = calcE(tempZiVector, tempQiVector, P);
-        disp(['tempE after recalc: ', num2str(tempE), ' and Eold is:' , num2str(E)]);
+%         disp(['tempE after recalc: ', num2str(tempE), ' and Eold is:' , num2str(E)]);
 
         %if E>temp -> improved ->continue
         %if E==temp -> if Qi changed or Zi changed, we might be fixind empty slot(Zi to Zi+1 is empty) ->continue
@@ -97,21 +97,21 @@ if(totalDiffrentColors > 2^N)
         loopCounter = loopCounter + 1;
     end
 
-    disp('--------------------------------------------');
-    disp('final results: ');
-    disp('ziVector: ');
-    disp(ziVector);
-    disp('qiVector: ');
-    disp(qiVector);
-    disp('Error: ');
-    disp(E);
+%     disp('--------------------------------------------');
+%     disp('final results: ');
+%     disp('ziVector: ');
+%     disp(ziVector);
+%     disp('qiVector: ');
+%     disp(qiVector);
+%     disp('Error: ');
+%     disp(E);
 
     %insert Qi's into original image
     imgNbit = calcNewNbitImg(img8bit, ziVector, qiVector);%TODO change to matlab instead of loop
-    showImage(imgNbit);
+%     showImage(imgNbit);
     Qvals = qiVector;
 else
-    disp('we are done. no calc is needed.')
+%     disp('we are done. no calc is needed.')
     Qvals = find(P);
     if(length(Qvals) < 2^N)%minimum size 2^N
         diff = 2^N - length(Qvals);
