@@ -15,7 +15,7 @@ function [bimg] = binarizeOptAdaptive(img,winsize)
 %         If window exceeds image boundaries – use only pixels within the image boundaries.
 
 %DELETE
-winsize = 50;
+winsize = 51;
 img = readImage('lighthouse.tif');
 showImage(img);
 %DELETE
