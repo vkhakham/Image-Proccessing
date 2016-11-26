@@ -1,76 +1,56 @@
 function    [imgNbit, Qvals] = optimalQuantization(img8bit,N)
-
+%
 % function    [imgNbit, Qvals] = optimalQuantization(img8bit,N)
 %               
-% This routine quantizes an 8 bit image into an N bit image using Optimal Quantization.
+% This routine quantizes an 8 bit image into an N bit image using Optimal 
+% Quantization.
 % 
 % Input:  img8bit - a grayscale image in the range [0..255] 
 %         N – number of bits for output image. N<8.
 %         
 % Output: imgNbit - a grayscale image with maximum 2^N different values
-%         Qvals  - a vector of length 2^N where each entry i contains the 8 bit gray value q(i-1). 
-%         NOTICE - if img8bit diffrent values <= 2^N, the function will
-%           return the original img8bit with QVals that contain all
-%           diffrent color with the last color cloned till QVals length is 2^n
+%         Qvals   - a vector of length 2^N where each entry i contains the 
+%                   8 bit gray value q(i). 
+%         NOTICE  - if img8bit diffrent values(shades of gray) <= 2^N, the 
+%                   function will return the original img8bit with QVals 
+%                   that contain all diffrent color with the last color 
+%                   cloned till QVals length is 2^n
 
 %DELETE a
-%img8bit = readImage('lighthouse.tif');
-%img8bit = [206 206 208; 200 205 204; 205 200 202]; %run this win N=4 and see where the fix is going wrong
+% img8bit = readImage('lighthouse.tif');
+% img8bit = [206 206 208; 200 205 204; 205 200 202]; %run this win N=4 and see where the fix is going wrong
 % img8bit = [1 1 1; 5 5 5; 3 3 3];
-%N = 2;
+% img8bit = [3 3 3; 3 3 3; 3 3 3];
+% N = 1;
 %DELETE a
 
-%histogram of img8bit
-P = histImage(img8bit); 
-totalDiffrentColors = length(find(P));%look on all columns on the Hist and look for non-zeros
+%if true, prints debug data
+global DEBUG;
+DEBUG = false;
 
-if(totalDiffrentColors > 2^N)
-    
-    %spread the Zi uniformly 
-    ziVector = (0:(2^N)) * (2^(8-N));
-    
-    isThereZiEmpty = false;
-    for i=1 : length(ziVector)-1
-        pixelsInCurrentZi = 0;%counting pixels in a Zi->Zi+1
-        for j=ziVector(i) : ziVector(i+1)-1 
-            pixelsInCurrentZi = pixelsInCurrentZi + P(j+1);
-        end
-        if(pixelsInCurrentZi == 0)
-            isThereZiEmpty = true;
-            break;
-        end
-    end
-    
+%histogram of img8bit - doesn't change 
+global P;
+P = histImage(img8bit); 
+
+%look on all columns on the Hist and look for non-zeros
+totalDiffrentColors = length(find(P));
+
+if(totalDiffrentColors > 2^N)%if not, we finished
+    ziVector = (0:(2^N)) * (2^(8-N));%spread the Zi uniformly 
+    isThereZiEmpty = lookForEmptyZi(ziVector);
     if(isThereZiEmpty == true)
-        %if found empty ZI - re guess 
-        ziVector = zeros(1,2^N+1);
-        ziVector(length(ziVector)) = 256;
-        %moving Zi so each will contain atleast one color - we know there are
-        %enough color because we checked (totalDiffrentColors > 2^N)
-        for i=1 : length(ziVector)-1
-            if(ziVector(i) >= ziVector(i+1))%if Zi-1 was moved, need to fix the currnet to start after him
-                ziVector(i+1) = ziVector(i) + 1;
-            end
-            pixelsInCurrentZi = 0;%counting pixels in a Zi->Zi+1
-            for j=ziVector(i) : ziVector(i+1)-1 
-                pixelsInCurrentZi = pixelsInCurrentZi + P(j+1);
-            end
-            if(pixelsInCurrentZi==0)%no pixels
-                index = ziVector(i+1);%mark first index on the next section
-                while(P(index) == 0)
-                    index = index + 1; %move till non-zero column
-                end
-                ziVector(i+1) = index;%place Zi+1 above the color (on the Hist its +1)
-            end
-        end
+        ziVector = spreadZiDiffrently(N);
     end
     
     %calculates Qi's
-    qiVector = calcQiByZi(ziVector, P);%first calc
+    qiVector = calcQiByZi(ziVector);%first calc
 
     %calculates Error
-    E = calcE(ziVector, qiVector, P);
-
+    E = calcE(ziVector, qiVector);
+    
+    %prints data
+    printData(ziVector, qiVector, E);
+    
     trioChanged = true;%will tell if there was improvment in this iteration.
     maxLoops = 500;
     loopCounter = 1;
@@ -82,11 +62,13 @@ if(totalDiffrentColors > 2^N)
         tempZiVector = calcZiByQi(qiVector);
         
         %re-calculates Qi's
-        tempQiVector = calcQiByZi(tempZiVector, P);
+        tempQiVector = calcQiByZi(tempZiVector);
 
         %re-calculates Error
-        tempE = calcE(tempZiVector, tempQiVector, P);
+        tempE = calcE(tempZiVector, tempQiVector);
 
+        printData(tempZiVector, tempQiVector, tempE);
+        
         %if E>temp -> improved ->continue
         %if E==temp -> if Qi changed or Zi changed, we might be fixind empty slot(Zi to Zi+1 is empty) ->continue
         if(E >= tempE && (~isequal(tempQiVector,qiVector) || ~isequal(tempZiVector,ziVector)))
@@ -100,20 +82,15 @@ if(totalDiffrentColors > 2^N)
         loopCounter = loopCounter + 1;
     end
 
-%     disp('--------------------------------------------');
-%     disp('final results: ');
-%     disp('ziVector: ');
-%     disp(ziVector);
-%     disp('qiVector: ');
-%     disp(qiVector);
-%     disp('Error: ');
-%     disp(E);
-
+    printData(ziVector, qiVector, E);
+    
     %insert Qi's into original image
+%     showImage(img8bit);
     imgNbit = calcNewNbitImg(img8bit, ziVector, qiVector);
     Qvals = qiVector;
+%     showImage(imgNbit);
 else
-    Qvals = find(P);
+    Qvals = find(P)-1;
     if(length(Qvals) < 2^N)%minimum size 2^N
         diff = 2^N - length(Qvals);
         Qvals = [Qvals ones(1,diff)*Qvals(length(Qvals))];%duplicate last element
@@ -122,56 +99,99 @@ else
 end
 end
 
-function [newQi] = calcQiByZi(oldZi, P)
-%calculates Qi's using Zi vector and P the histogram of original image
-newQi = (zeros(length(oldZi)-1,1))'; %declaring to avoid dynamic allocation
+function [newQi] = calcQiByZi(oldZi)
+    %calculates Qi's using Zi vector and P the histogram of original image
+    global P;
+    newQi = (zeros(length(oldZi)-1,1))'; %declaring to avoid dynamic allocation
 
-for i=1 : length(newQi)
-    sumOfUp = 0;
-    sumOfDown = 0;
-    for j=oldZi(i) : oldZi(i+1)-1 
-        sumOfUp = sumOfUp + j * P(j+1);
-        sumOfDown = sumOfDown + P(j+1);
-    end
-    if(sumOfDown == 0)
-        if (i == 1)
-            newQi(i) = oldZi(i+1);%should never happen
-        else 
-            newQi(i) = oldZi(i);%should never happen
+    for i=1 : length(newQi)
+        grayColorVector = find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) ) - 1 + oldZi(i);
+        numberOfPixelsInThatColor = P(find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) )  + oldZi(i));
+        numerator   = sum(grayColorVector .* numberOfPixelsInThatColor);
+        denominator = sum(P((oldZi(i)+1):(oldZi(i+1))));
+        if(denominator == 0)%should never happen
+            index = i;
+            if (i == 1)
+                index = 2;
+            end
+            newQi(i) = oldZi(index);
+        else
+            newQi(i) = round(numerator / denominator);
         end
-    else
-        newQi(i) = round(sumOfUp / sumOfDown);
     end
 end
 
-end
-
-function [E] = calcE(ziVector, qiVector, P)
-%calculates Error
-E = 0;
-for i=1 : length(qiVector)
-    for j=ziVector(i) : ziVector(i+1)-1 
-        E = E + P(j+1)*((j-qiVector(i))^2);
+function [E] = calcE(ziVector, qiVector)
+    %calculates Error
+    global P;
+    E = 0;
+    for i=1 : length(qiVector)
+        grayColorVector = find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) ) - 1 + ziVector(i);
+        numberOfPixelsInThatColor = P(find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) )  + ziVector(i));
+        E = E + sum(numberOfPixelsInThatColor .* ((grayColorVector-qiVector(i)).^2));
     end
-end
 end
 
 function [newZi] = calcZiByQi(oldQi)
-%calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
-newZi = (zeros(length(oldQi)+1,1))';
-for i=2 : length(newZi) - 1
-    newZi(i) = round((oldQi(i-1) + oldQi(i)) / 2);
-end
-newZi(length(newZi)) = 256;
+    %calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
+    newZi = (zeros(length(oldQi)+1,1))';
+    for i=2 : length(newZi) - 1
+        newZi(i) = round((oldQi(i-1) + oldQi(i)) / 2);
+    end
+    newZi(length(newZi)) = 256;
 end
 
 function [imgNbit] = calcNewNbitImg(img8bit, ziVector, qiVector)
-%insert Qi's into original image instead of old colors
-for i=1 : length(ziVector)-1
-    img8bit(img8bit >= ziVector(i) & img8bit < ziVector(i+1)) = qiVector(i);
-end
-imgNbit = img8bit;
+    %insert Qi's into original image instead of old colors
+    for i=1 : length(ziVector)-1
+        img8bit(img8bit >= ziVector(i) & img8bit < ziVector(i+1)) = qiVector(i);
+    end
+    imgNbit = img8bit;
 end
 
+function [] = printData(argZiVector, argQiVector, error)
+    %used for debugging
+    global DEBUG;
+    if (DEBUG == true)
+        disp('----------------------');
+        disp('argZiVector: ');
+        disp(argZiVector);
+        disp('argQiVector: ');
+        disp(argQiVector);
+        disp('error: ');
+        disp(error);
+        disp('----------------------');
+    end
+end
+
+function [isThereZiEmpty] = lookForEmptyZi(ziVector)
+    global P;
+    isThereZiEmpty = false;
+    for i=1 : length(ziVector)-1
+        sumOfZi = sum(P(ziVector(i)+1:(ziVector(i+1))));
+        if(sumOfZi == 0)
+            isThereZiEmpty = true;
+            break;
+        end
+    end
+end
+
+function [ziVector] = spreadZiDiffrently(N)
+    global P;
+    %if found empty ZI - re guess 
+    ziVector = zeros(1,2^N+1);
+    ziVector(length(ziVector)) = 256;
+    %moving Zi so each will contain atleast one color - we know there are
+    %enough color because we checked (totalDiffrentColors > 2^N)
+    for i=1 : length(ziVector)-1
+        if(ziVector(i) >= ziVector(i+1))%if Zi+1 was moved last iteration, now Zi > Zi+1
+            ziVector(i+1) = ziVector(i) + 1;%fix Zi+1 to be > Zi
+        end
+        sumOfZi = sum(P(ziVector(i)+1:(ziVector(i+1))));
+        if(sumOfZi==0)%no pixels
+            ziVector(i+1) = find(P(ziVector(i+1):length(P)),1);        
+        end
+    end
+end
 
 

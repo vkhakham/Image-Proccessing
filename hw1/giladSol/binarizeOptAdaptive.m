@@ -23,8 +23,7 @@ img = readImage('addedByGilad1.tif');
 
 [rows,cols] = size(img);
 boundCheck = floor(winsize/2);
-cloneImgForTValues = img; % this(i,j) will be the T for img(i,j).
-
+cloneImgForTValues = zeros(size(img));% cloneImgForTValues(i,j) will be the T for img(i,j).
 for i=1 : rows
     for j=1 : cols
         %calculate indexes of sub-matrix
