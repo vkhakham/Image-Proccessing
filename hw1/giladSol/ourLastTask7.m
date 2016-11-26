@@ -24,12 +24,31 @@
 % When does the advantage in run time kick in?
 % You can plot ratio of run times as a function of window size to make your point.
 
-img1 = readImage('lighthouse.tif');
-img1UniformQuan = uniformQuantization(img1,4);
-img1OptimalQuan = optimalQuantization(img1,4);
-showImage(img1);
-showImage(img1UniformQuan);
-showImage(img1OptimalQuan);
+%a
+% img1 = readImage('lighthouse.tif');
+% img1UniformQuan = uniformQuantization(img1,4);
+% img1OptimalQuan = optimalQuantization(img1,4);
+% showImage(img1);
+% showImage(img1UniformQuan);
+% showImage(img1OptimalQuan);
+% disp('false contour errors mainly in the background colors.');
+
+%b
+% img2 = readImage('addedByGilad1.tif');
+% img2Binarize = binarize(img2,128);
+% [img2Binarizeopt,~] = binarizeOpt(img2);
+% showImage(img2);
+% showImage(img2Binarize);
+% showImage(img2Binarizeopt);
+
+%c
+img3 = readImage('addedByGilad1.tif');
+[img3BinarizeOptT,~] = binarizeOpt(img3);
+img3BinarizeOptTAdaptive = binarizeOptAdaptive(img3,151);
+showImage(img3);
+showImage(img3BinarizeOptT);
+showImage(img3BinarizeOptTAdaptive);
+
 %TODO
 %check where result can be double but used for index(must be int)- use
 %round not floor

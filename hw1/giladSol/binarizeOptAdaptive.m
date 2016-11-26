@@ -15,8 +15,8 @@ function [bimg] = binarizeOptAdaptive(img,winsize)
 %         If window exceeds image boundaries – use only pixels within the image boundaries.
 
 %DELETE
-% winsize = 51;
-% img = readImage('addedByGilad1.tif');
+winsize = 151;
+img = readImage('addedByGilad1.tif');
 % showImage(img);
 %DELETE
 
@@ -52,6 +52,6 @@ for i=1 : rows
 end
 
 bimg = (img>cloneImgForTValues)*255;
-% showImage(bimg); 
+showImage(bimg); 
 end
 
