@@ -15,8 +15,8 @@ function [bimg] = binarizeOptAdaptive(img,winsize)
 %         If window exceeds image boundaries – use only pixels within the image boundaries.
 
 %DELETE
-winsize = 51;
-img = readImage('lighthouse.tif');
+% winsize = 51;
+% img = readImage('addedByGilad1.tif');
 % showImage(img);
 %DELETE
 
@@ -47,12 +47,11 @@ for i=1 : rows
         subimg = img(up:down,left:right);
         [~, Qvals] = optimalQuantization(subimg,1);
         cloneImgForTValues(i,j) = mean(Qvals); %allow fractions.
-%         disp('hello');
     end
     disp(num2str(i));
 end
 
 bimg = (img>cloneImgForTValues)*255;
-showImage(bimg); 
+% showImage(bimg); 
 end
 

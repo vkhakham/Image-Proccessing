@@ -24,9 +24,12 @@
 % When does the advantage in run time kick in?
 % You can plot ratio of run times as a function of window size to make your point.
 
-
-
-
+img1 = readImage('lighthouse.tif');
+img1UniformQuan = uniformQuantization(img1,4);
+img1OptimalQuan = optimalQuantization(img1,4);
+showImage(img1);
+showImage(img1UniformQuan);
+showImage(img1OptimalQuan);
 %TODO
 %check where result can be double but used for index(must be int)- use
 %round not floor
