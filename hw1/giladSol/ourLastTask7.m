@@ -24,8 +24,8 @@
 % When does the advantage in run time kick in?
 % You can plot ratio of run times as a function of window size to make your point.
 
-pics = {'addedScissors.tif';'barbarasmall.tif';'cups.tif';'darkimage.tif';'fourSquares.tif';'lena.tif';'stroller.tif';'wine.tif'}
-length(pics);
+% pics = {'addedScissors.tif';'barbarasmall.tif';'cups.tif';'darkimage.tif';'fourSquares.tif';'lena.tif';'stroller.tif';'wine.tif'}
+% length(pics);
 
 % a
 img1 = readImage('darkimage.tif');
@@ -63,20 +63,17 @@ disp(' ');
 %c
 img3 = readImage('lakeScene.tif');
 [img3BinarizeOptT,~] = binarizeOpt(img3);
-img3BinarizeOptTAdaptive = binarizeOptAdaptive(img3,101);
+img3BinarizeOptTAdaptive = binarizeOptAdaptive(img3,31);
 showImage(img3);
 showImage(img3BinarizeOptT);
 showImage(img3BinarizeOptTAdaptive);
 disp('***********question 7c*************');
-disp('    c. diff between binarizeOpt("lakeScene.tif") and  binarizeOptAdaptive("lakeScene.tif",101)');
+disp('    c. diff between binarizeOpt("lakeScene.tif") and  binarizeOptAdaptive("lakeScene.tif",31)');
 disp('    left pic: original, center pic: binarizeOpt, right pic: binarizeOptAdaptive');
 disp('    binarizeOptAdaptive is better');
-disp('    as for the moment binarizeOptAdaptive("lakeScene.tif",101) took over 30 min');
-disp('    in the center pic,we lost the mountains in the background. also we lost the small islan infront of the mountain.');
-disp('    in the right pic, we can see the small island(on the bottom left) becuase binarizeOptAdaptive could seperate colors better when looking on smaller pics(winsize^2).');
+disp('    as for the moment binarizeOptAdaptive("lakeScene.tif",31) took over 9 min');
+disp('    we chose 31 beacuse the picture details change fast.');
+disp('    in the center pic,we lost the mountains in the background. also we lost the trees infront of the mountain.');
+disp('    in the right pic, we can see the trees infront of the mountain becuase binarizeOptAdaptive could seperate colors better when looking on smaller pics(winsize^2).');
+disp('    also, we can see the background and alot of details that binarizeOpt lost');
 disp('***********question 7c*************');
-
-%TODO
-%check where result can be double but used for index(must be int)- use
-%round not floor
-%check all divisions for x/0
