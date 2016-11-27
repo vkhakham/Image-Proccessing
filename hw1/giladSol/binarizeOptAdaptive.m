@@ -25,6 +25,7 @@ img = readImage('addedByGilad1.tif');
 boundCheck = floor(winsize/2);
 cloneImgForTValues = zeros(size(img));% cloneImgForTValues(i,j) will be the T for img(i,j).
 for i=1 : rows
+    tic
     for j=1 : cols
         %calculate indexes of sub-matrix
         up = i - boundCheck;
@@ -47,6 +48,7 @@ for i=1 : rows
         [~, Qvals] = optimalQuantization(subimg,1);
         cloneImgForTValues(i,j) = mean(Qvals); %allow fractions.
     end
+    toc
     disp(num2str(i));
 end
 

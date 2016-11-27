@@ -19,8 +19,9 @@ function    [bimg,T] = binarizeOpt(img)
 %T = mean(Qvals)
 [~, Qvals] = optimalQuantization(img,1);
 
+T = mean(Qvals);
 %using binarize with T
-bimg = binarize(img,mean(Qvals));
+bimg = binarize(img,T);
 
 %del disp(['T is: ', num2str(T)]);
 % showImage(bimg);
