@@ -15,21 +15,15 @@ function    [imgNbit, Qvals] = optimalQuantization(img8bit,N)
 %                   function will return the original img8bit with QVals 
 %                   that contain all diffrent color with the last color 
 %                   cloned till QVals length is 2^n
+% Method: checks how much color in the img8bit. if less than 2^N ->done
+%         guess Zi uniformly. if one or more Zi empty, reguess and place
+%         atleast one color in each Zi
+%         calc Qi's and Error. keep doing so while Error decreace
+%         or Error the same and Zi or Qi vector changed. also don't do 
+%         more iterations than MaxLoops.
+%         once Zi and Qi determind, calculate the new imgNbit
 
-%DELETE a
-% img8bit = readImage('lighthouse.tif');
-% img8bit = [206 206 208; 200 205 204; 205 200 202]; %run this win N=4 and see where the fix is going wrong
-% img8bit = [1 1 1; 5 5 5; 3 3 3];
-% img8bit = [3 3 3; 3 3 3; 3 3 3];
-% N = 1;
-%DELETE a
-
-%if true, prints debug data
-global DEBUG;
-DEBUG = false;
-
-%histogram of img8bit - doesn't change 
-global P;
+global P; %histogram of img8bit - doesn't change 
 P = histImage(img8bit); 
 
 %look on all columns on the Hist and look for non-zeros
@@ -49,7 +43,7 @@ if(totalDiffrentColors > 2^N)%if not, we finished
     E = calcE(ziVector, qiVector);
     
     %prints data
-    printData(ziVector, qiVector, E);
+    %printData(ziVector, qiVector, E);
     
     trioChanged = true;%will tell if there was improvment in this iteration.
     maxLoops = 500;
@@ -67,7 +61,7 @@ if(totalDiffrentColors > 2^N)%if not, we finished
         %re-calculates Error
         tempE = calcE(tempZiVector, tempQiVector);
 
-        printData(tempZiVector, tempQiVector, tempE);
+        %printData(tempZiVector, tempQiVector, tempE);
         
         %if E>temp -> improved ->continue
         %if E==temp -> if Qi changed or Zi changed, we might be fixind empty slot(Zi to Zi+1 is empty) ->continue
@@ -82,13 +76,11 @@ if(totalDiffrentColors > 2^N)%if not, we finished
         loopCounter = loopCounter + 1;
     end
 
-    printData(ziVector, qiVector, E);
+    %printData(ziVector, qiVector, E);
     
     %insert Qi's into original image
-%     showImage(img8bit);
     imgNbit = calcNewNbitImg(img8bit, ziVector, qiVector);
     Qvals = qiVector;
-%     showImage(imgNbit);
 else
     Qvals = find(P)-1;
     if(length(Qvals) < 2^N)%minimum size 2^N
@@ -100,98 +92,99 @@ end
 end
 
 function [newQi] = calcQiByZi(oldZi)
-    %calculates Qi's using Zi vector and P the histogram of original image
-    global P;
-    newQi = (zeros(length(oldZi)-1,1))'; %declaring to avoid dynamic allocation
+%calculates Qi's using Zi vector and P the histogram of original image
+global P;
+newQi = (zeros(length(oldZi)-1,1))'; %declaring to avoid dynamic allocation
 
-    for i=1 : length(newQi)
-        grayColorVector = find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) ) - 1 + oldZi(i);
-        numberOfPixelsInThatColor = P(find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) )  + oldZi(i));
-        numerator   = sum(grayColorVector .* numberOfPixelsInThatColor);
-        denominator = sum(P((oldZi(i)+1):(oldZi(i+1))));
-        if(denominator == 0)%should never happen
-            index = i;
-            if (i == 1)
-                index = 2;
-            end
-            newQi(i) = oldZi(index);
-        else
-            newQi(i) = round(numerator / denominator);
+for i=1 : length(newQi)
+    grayColorVector = find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) ) - 1 + oldZi(i);
+    numberOfPixelsInThatColor = P(find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) )  + oldZi(i));
+    numerator   = sum(grayColorVector .* numberOfPixelsInThatColor);
+    denominator = sum(P((oldZi(i)+1):(oldZi(i+1))));
+    if(denominator == 0)%should never happen
+        index = i;
+        if (i == 1)
+            index = 2;
         end
+        newQi(i) = oldZi(index);
+    else
+        newQi(i) = round(numerator / denominator);
     end
+end
 end
 
 function [E] = calcE(ziVector, qiVector)
-    %calculates Error
-    global P;
-    E = 0;
-    for i=1 : length(qiVector)
-        grayColorVector = find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) ) - 1 + ziVector(i);
-        numberOfPixelsInThatColor = P(find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) )  + ziVector(i));
-        E = E + sum(numberOfPixelsInThatColor .* ((grayColorVector-qiVector(i)).^2));
-    end
+%calculates Error
+global P;
+E = 0;
+for i=1 : length(qiVector)
+    grayColorVector = find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) ) - 1 + ziVector(i);
+    numberOfPixelsInThatColor = P(find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) )  + ziVector(i));
+    E = E + sum(numberOfPixelsInThatColor .* ((grayColorVector-qiVector(i)).^2));
+end
 end
 
 function [newZi] = calcZiByQi(oldQi)
-    %calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
-    newZi = (zeros(length(oldQi)+1,1))';
-    for i=2 : length(newZi) - 1
-        newZi(i) = round((oldQi(i-1) + oldQi(i)) / 2);
-    end
-    newZi(length(newZi)) = 256;
+%calculates Zi's. note: z(1)=0 and z(2^N)=256 allways.
+newZi = (zeros(length(oldQi)+1,1))';
+for i=2 : length(newZi) - 1
+    newZi(i) = round((oldQi(i-1) + oldQi(i)) / 2);
+end
+newZi(length(newZi)) = 256;
 end
 
 function [imgNbit] = calcNewNbitImg(img8bit, ziVector, qiVector)
-    %insert Qi's into original image instead of old colors
-    for i=1 : length(ziVector)-1
-        img8bit(img8bit >= ziVector(i) & img8bit < ziVector(i+1)) = qiVector(i);
-    end
-    imgNbit = img8bit;
+%insert Qi's into original image instead of old colors
+for i=1 : length(ziVector)-1
+    img8bit(img8bit >= ziVector(i) & img8bit < ziVector(i+1)) = qiVector(i);
+end
+imgNbit = img8bit;
 end
 
 function [] = printData(argZiVector, argQiVector, error)
-    %used for debugging
-    global DEBUG;
-    if (DEBUG == true)
-        disp('----------------------');
-        disp('argZiVector: ');
-        disp(argZiVector);
-        disp('argQiVector: ');
-        disp(argQiVector);
-        disp('error: ');
-        disp(error);
-        disp('----------------------');
-    end
+%used for debugging
+DEBUG = false;
+if (DEBUG == true)
+    disp('----------------------');
+    disp('argZiVector: ');
+    disp(argZiVector);
+    disp('argQiVector: ');
+    disp(argQiVector);
+    disp('error: ');
+    disp(error);
+    disp('----------------------');
+end
 end
 
 function [isThereZiEmpty] = lookForEmptyZi(ziVector)
-    global P;
-    isThereZiEmpty = false;
-    for i=1 : length(ziVector)-1
-        sumOfZi = sum(P(ziVector(i)+1:(ziVector(i+1))));
-        if(sumOfZi == 0)
-            isThereZiEmpty = true;
-            break;
-        end
+%checks if there is empty Zi
+global P;
+isThereZiEmpty = false;
+for i=1 : length(ziVector)-1
+    sumOfZi = sum(P(ziVector(i)+1:(ziVector(i+1))));
+    if(sumOfZi == 0)
+        isThereZiEmpty = true;
+        break;
     end
+end
 end
 
 function [ziVector] = spreadZiDiffrently(N)
-    global P;
-    %if found empty ZI - re guess 
-    ziVector = zeros(1,2^N+1);
-    ziVector(length(ziVector)) = 256;
-    %moving Zi so each will contain atleast one color - we know there are
-    %enough color because we checked (totalDiffrentColors > 2^N)
-    for i=1 : length(ziVector)-1
-        if(ziVector(i) >= ziVector(i+1))%if Zi+1 was moved last iteration, now Zi > Zi+1
-            ziVector(i+1) = ziVector(i) + 1;%fix Zi+1 to be > Zi
-        end
-        sumOfZi = sum(P(ziVector(i)+1:(ziVector(i+1))));
-        if(sumOfZi==0)%no pixels
-            ziVector(i+1) = find(P(ziVector(i+1):length(P)),1);        
-        end
+%if found empty ZI - re guess 
+global P;
+ziVector = zeros(1,2^N+1);
+ziVector(length(ziVector)) = 256;
+%moving Zi so each will contain atleast one color - we know there are
+%enough color because we checked (totalDiffrentColors > 2^N)
+for i=1 : length(ziVector)-1
+    if(ziVector(i) >= ziVector(i+1))%if Zi+1 was moved last iteration, now Zi > Zi+1
+        ziVector(i+1) = ziVector(i) + 1;%fix Zi+1 to be > Zi
     end
+    sumOfZi = sum(P(ziVector(i)+1:(ziVector(i+1))));
+    if(sumOfZi==0)%no pixels
+        ziVector(i+1) = find(P(ziVector(i+1):length(P)),1);        
+    end
+end
 end
 
 

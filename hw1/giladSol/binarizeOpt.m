@@ -14,16 +14,12 @@ function    [bimg,T] = binarizeOpt(img)
 % Method:  Determines the threshold value which 
 %          optimally separates objects from background. 
 
-% img = readImage('lighthouse.tif');
 
-%T = mean(Qvals)
-[~, Qvals] = optimalQuantization(img,1);
+[~, Qvals] = optimalQuantization(img,1);%T = Z1 = mean(Qvals)
 
 T = mean(Qvals);
-%using binarize with T
-bimg = binarize(img,T);
 
-%del disp(['T is: ', num2str(T)]);
-% showImage(bimg);
+bimg = binarize(img,T);%using binarize with T
+
 end
 

@@ -8,9 +8,15 @@ function [imgNbit,Qvals] = uniformQuantization(img8bit,N)
 %        N – number of bits for output image. N<8.
 %
 %Output: imgNbit - a grayscale image with maximum 2N different values 
-%        Qvals  - a vector of length 2N where each entry i contains the 8 bit gray value qi. 
-%              
-%Method: Uses Uniform Quantization to create the N bit image. 
+%        Qvals  - a vector of length 2N where each entry i contains the 8 
+%        bit gray value qi. 
+%        
+% Method: div the img8bit in 2^(8-N) and floor the values will result have 
+%         2^N diffrent values in the img8bit.
+%         multiply with 2^(8-N) give each value the uniformly spreaded Zi.
+%         add 2^(7-N) will move the value to the middle of the bucket 
+%         between Zi and Zi+1.
+%         calc Qvals very similar
 
 imgNbit = floor(img8bit / 2^(8-N)) * 2^(8-N) + 2^(7-N);
 Qvals   = (0:(2^N-1)) * (2^(8-N)) + 2^(7-N);

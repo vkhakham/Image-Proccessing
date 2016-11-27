@@ -14,18 +14,11 @@ function [bimg] = binarizeOptAdaptive(img,winsize)
 %         in winsize X winsize window around the pixel. Apply optimalQuantization with N=1 in each window.
 %         If window exceeds image boundaries – use only pixels within the image boundaries.
 
-%DELETE
-winsize = 151;
-img = readImage('addedByGilad1.tif');
-% showImage(img);
-%DELETE
-
-
 [rows,cols] = size(img);
 boundCheck = floor(winsize/2);
 cloneImgForTValues = zeros(size(img));% cloneImgForTValues(i,j) will be the T for img(i,j).
 for i=1 : rows
-    tic
+%     tic
     for j=1 : cols
         %calculate indexes of sub-matrix
         up = i - boundCheck;
@@ -48,11 +41,11 @@ for i=1 : rows
         [~, Qvals] = optimalQuantization(subimg,1);
         cloneImgForTValues(i,j) = mean(Qvals); %allow fractions.
     end
-    toc
-    disp(num2str(i));
+%     toc
+%    disp(num2str(i));
 end
 
 bimg = (img>cloneImgForTValues)*255;
-showImage(bimg); 
+
 end
 
