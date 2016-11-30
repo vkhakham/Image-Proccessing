@@ -2,9 +2,9 @@
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
 function h = histogramFromIH(IH,box)
-
+%
 % function h = histogramFromIH(IH,box)
-% (file name is accordingly histogramFromIH.m ) 
+%  
 % This routine builds the IntegralHistogram of image img.
 % 
 % Input:  IH – a 3 dimensional array containing the integralHistogram

@@ -2,7 +2,7 @@
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
 function [bimg] = binarizeOptAdaptive(img,winsize)
-
+%
 % function [bimg] = binarizeOptAdaptive(img,winsize)
 %             
 % Given an image, calculates the optimal threshold and returns the optimally thresholded image.
