@@ -118,9 +118,10 @@ function [E] = calcE(ziVector, qiVector)
 global P;
 E = 0;
 for i=1 : length(qiVector)
-    grayColorVector = find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) ) - 1 + ziVector(i);
-    numberOfPixelsInThatColor = P(find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) )  + ziVector(i));
-    E = E + sum(numberOfPixelsInThatColor .* ((grayColorVector-qiVector(i)).^2));
+    %all non zero colums in hist [Zi..(Zi+1)-1]. note value X in Hist is color X-1 in img
+    grayColorVector = find( P( (ziVector(i)+1) : (ziVector(i+1) ) ) ) + ziVector(i);%+ ziVector(i) cuase we dont start from 1
+    numberOfPixelsInThatColor = P(grayColorVector);
+    E = E + sum(numberOfPixelsInThatColor .* (((grayColorVector-1)-qiVector(i)).^2));%-1 to change from hist to 0..255
 end
 end
 
