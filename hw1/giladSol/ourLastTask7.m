@@ -75,3 +75,26 @@
 % disp('    in the right pic, we can see the trees infront of the mountain becuase binarizeOptAdaptive could seperate colors better when looking on smaller pics(winsize^2).');
 % disp('    also, we can see the background and alot of details that binarizeOpt lost');
 % disp('***********question 7c*************');
+
+%d
+% d.    Extra Credit:  Compare runtimes using optimal adaptive thresholding with and without IntegralHistogram. 
+% You can use tic and toc to measure run time. 
+% When does the advantage in run time kick in?
+% You can plot ratio of run times as a function of window size to make your point.
+img4 = readImage('lakeScene.tif');
+tic
+img3BinarizeOptTAdaptive = binarizeOptAdaptive(img4,31);
+disp('time for binarizeOptAdaptive(img3,31) took:');
+toc
+IH = IntegralHistogram(img4);
+tic
+img3BinarizeOptTAdaptiveIH = binarizeOptAdaptiveIH(img4,31,IH);
+disp('time for binarizeOptAdaptiveIH(img3,31,IH) took:');
+toc
+showImage(img3BinarizeOptTAdaptive);
+showImage(img3BinarizeOptTAdaptiveIH);
+disp('the advantage is clearly when winsize is big. while in binarizeOptAdaptive we calc each subimg histogram');
+disp(',in binarizeOptAdaptiveIH we do it once preprocessing. if win size if big, the work for binarizeOptAdaptive');
+disp('grows significantly, while binarizeOptAdaptiveIH stays the same regarding the hist calc');
+
+
