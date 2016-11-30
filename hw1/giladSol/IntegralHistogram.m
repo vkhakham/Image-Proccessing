@@ -10,7 +10,7 @@ function IH = IntegralHistogram(img)
 % 
 % Method:    Use the efficient algorithm, for computing Integral Histogram image.
 
-%img = readImage('darkimage.tif');
+% img = readImage('darkimage.tif');
 img = img + 1;%values im histogram 1..256
 [I,J] = size(img);
 IH = zeros(I,J,256);
@@ -35,8 +35,10 @@ for i=1 : 256
        IH(i,j,aI_x_y) = IH(i,j,aI_x_y) + 1;
    end
 end
-%P = histImage(img-1);
-%feat = reshape(IH(i,j,:),1,size(IH(i,j,:),3));
-%isequal(P,feat)
-
+% P = histImage(img-1);
+% feat = reshape(IH(i,j,:),1,size(IH(i,j,:),3));
+% if(isequal(P,feat))
+%     disp('last pixel hist in this function is equal to hist result from function histImage(img)');
+% end
+% IH = 0;
 end

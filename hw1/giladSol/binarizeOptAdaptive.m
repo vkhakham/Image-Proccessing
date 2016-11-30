@@ -38,7 +38,7 @@ for i=1 : rows
             right = cols;
         end
         subimg = img(up:down,left:right);
-        [~, Qvals] = optimalQuantization(subimg,1);
+        [~, Qvals] = optimalQuantization(subimg,1);%didnt use [~,T]= binarizeOpt(subimg)not to overload the stack
         cloneImgForTValues(i,j) = mean(Qvals); %allow fractions.
     end
 %     toc
