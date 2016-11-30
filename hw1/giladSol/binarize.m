@@ -1,3 +1,6 @@
+%authors: 
+% Vadim Khakham, id 311890156
+% Gilad Eini   , id 034744920
 function bimg = binarize(img,T) 
 
 % function bimg = binarize(img,T) 

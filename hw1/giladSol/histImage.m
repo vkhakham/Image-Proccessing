@@ -1,3 +1,6 @@
+%authors: 
+% Vadim Khakham, id 311890156
+% Gilad Eini   , id 034744920
 function h = histImage(img)
 %
 %function h = histImage(img)

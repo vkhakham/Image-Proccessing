@@ -1,3 +1,6 @@
+%authors: 
+% Vadim Khakham, id 311890156
+% Gilad Eini   , id 034744920
 % script that answers question 7(also 7d, the bonus included)
 
 % a

@@ -1,3 +1,6 @@
+%authors: 
+% Vadim Khakham, id 311890156
+% Gilad Eini   , id 034744920
 function    [imgNbit, Qvals] = optimalQuantizationUsingHistFromIH(img8bit,N,hist)
 %
 % function    [imgNbit, Qvals] = optimalQuantizationUsingHistFromIH(img8bit,N,hist)
@@ -102,8 +105,8 @@ for i=1 : length(newQi)
     numberOfPixelsInThatColor = P(find( P( (oldZi(i)+1) : (oldZi(i+1) ) ) )  + oldZi(i));
     numerator   = sum(grayColorVector .* numberOfPixelsInThatColor);
     denominator = sum(P((oldZi(i)+1):(oldZi(i+1))));
-    if(denominator == 0)%should never happen
-        index = i;
+    if(denominator == 0)%should never happen, gave second guess that supposed to avoid empty Zi. left this fix just in case
+        index = i;%doing qi = (zi + zi+1) / 2) as suggested didnt help on some cases.
         if (i == 1)
             index = 2;
         end
