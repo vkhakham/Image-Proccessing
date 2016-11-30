@@ -3,6 +3,9 @@
 % Gilad Eini   , id 034744920
 % script that answers question 7(also 7d, the bonus included)
 
+%we asume that you will run each clause seperatly.
+%so left image will be figure1 and right will be figure2
+
 % a
 img1 = readImage('darkimage.tif');
 [img1UniformQuan,~] = uniformQuantization(img1,4);
