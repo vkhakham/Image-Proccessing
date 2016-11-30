@@ -14,16 +14,11 @@ function [bimg] = binarizeOptAdaptiveIH(img,winsize,IH)
 % 
 % Method:  Per image pixel determines the optimal threshold value by searching for optimal 
 
-% img = readImage('darkimage.tif');
-% winsize = 31;
-% IH = IntegralHistogram(img);
-
 [rows,cols] = size(img);
 boundCheck = floor(winsize/2);
 cloneImgForTValues = zeros(size(img));% cloneImgForTValues(i,j) will be the T for img(i,j).
 
 for i=1 : rows
-%     tic
     for j=1 : cols
         %calculate indexes of sub-matrix
         up = i - boundCheck;
@@ -47,9 +42,8 @@ for i=1 : rows
         [~, Qvals] = optimalQuantizationUsingHistFromIH(subimg,1,subimgHist);
         cloneImgForTValues(i,j) = mean(Qvals); %allow fractions.
     end
-%     toc
-%    disp(num2str(i));
 end
+
 bimg = (img>cloneImgForTValues)*255;
 
 end

@@ -13,15 +13,10 @@ function h = histogramFromIH(IH,box)
 % 
 % Method: Efficiently computes the histogram in window [r0 : r1, c0 : c1] from IH.
 
-% img = readImage('darkimage.tif');
-% box = [0 256 0 256];
-% IH = IntegralHistogram(img);
-
 r0 = box(1);
 r1 = box(2);
 c0 = box(3);
 c1 = box(4);
-
 
 %we assume that histogramFromIH(IH,[0 1 0 1]) is legal. 
 %the output will be a histogram with one value - img(1,1)+1
