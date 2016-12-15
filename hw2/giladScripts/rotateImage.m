@@ -52,13 +52,21 @@ function newimg = rotateImage(img,theta,centerX,centerY,newSize)
     Y = Y - centerY;
     sourceCoors = TinvNotDirect*[X(:) Y(:)]';%locate source pixel for each target pixel
     
+    H1 = TinvNotDirect*[X(:) Y(:)]';
+    H2 = T\[X(:) Y(:)]';
+    if(isequal(H1,H2) )
+        display('H1 and H2 the same');
+    else
+        display('H1 and H2 diff');
+    end
+    
     %shift pixels back
     sourceCoors(1,:) = sourceCoors(1,:) + centerX;
     sourceCoors(2,:) = sourceCoors(2,:) + centerY;
  
     %interpolate colors
     newimg = interpolateUsingNN(img, sourceCoors);%temp script thats using NN instead of bilinear
-    newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
+    newimg = reshape(newimg, [r, c]);%getting a vector in the size 1X(RxC) -> reshape to image  
 
     %%%% check what matlab prepared function create. i think it arournd
     %%%% the middle pixel
