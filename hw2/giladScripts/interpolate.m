@@ -15,44 +15,11 @@
 % Method:Performs Bilinear interpolation to evaluate the gray value of the sourceCoors
 % within image img. Uses Matrix operations only when computing interpolation.
 % Pixels that have no source (outside the image) should assigned gray value 0 
-function sourceGrayVals = interpolate(img,sourceCoors)
-    img = readImage('im2.tif');
-    newSize = size(img);
-    r = newSize(1);
-    c = newSize(2);
-    [X,Y] = meshgrid(1:c, 1:r); %arrange the target pixels in 2XN shape
-%     X = X + 10.3;
-%     Y = Y + 10.3;
-    sourceCoors = [X(:) Y(:)]';   
-    sourceGrayVals = ones(r*c ,1);   
-    for i=1 : r*c
-        x = sourceCoors(1,i);
-        y = sourceCoors(2,i);
-        NW = [min(max(floor(x),1),r), min(max(floor(y),1),c)];
-        NE = [min(max(floor(x),1),r), max(min(ceil(y),c),1)];
-        SW = [max(min(ceil(x),r),1) , min(max(floor(y),1),c)];
-        SE = [max(min(ceil(x),r),1) , max(min(ceil(y),c),1)];
-        if(NE(1) ~= NW(1))
-            Ndx = (x - NW(1)) / (NE(1) - NW(1)); 
-            NColor = img(NW(1), NW(2)) * Ndx + img(NE(1), NE(2)) * (1 - Ndx);
-            Sdx = (x - SW(1)) / (SE(1) - SW(1));
-            SColor = img(SW(1), SW(2)) * Ndx + img(SE(1), SE(2)) * (1 - Sdx);
-        else 
-            try
-                NColor = img(NW(1), NW(2));
-            catch
-                disp('1');
-            end
-            SColor = img(SW(1), SW(2));
-        end
-        if(SE(2) ~= NW(2))
-            dy = (y - NW(2)) / (SE(2) - NW(2));
-            color = NColor * dy + SColor * (1 - dy);
-        else
-            color = NColor;
-        end
-        sourceGrayVals(i) = round(color);
-    end
+function sourceGrayVals = interpolate(img,sourceCoors) 
+    [r,c] = size(img);
+   
+    Xs = sourceCoors(1,:);
+    Ys = sourceCoors(2,:);
     
     newimg = reshape(sourceGrayVals, [r, c]);
     showImage(img);
@@ -61,5 +28,24 @@ function sourceGrayVals = interpolate(img,sourceCoors)
     clear;
     close all;
     clc;
+    NEind   = sub2ind(size(img), NE(:,1), NE(:,2));
+    NE = img(NEind);
+    
+    SWind   = sub2ind(size(img), SW(:,1), SW(:,2));
+    SW = img(SWind);
+    
+    SEind   = sub2ind(size(img), SE(:,1), SE(:,2));
+    SE = img(SEind);
+    
+    %calculate linear inter' to SE and SW ->S (with deltaX)
+    %and than do linear inter' to the NE and NW ->N(with deltaX)
+    %finish with linear inter' to N and S -> V(with deltaY) 
+    S = SE .* deltaX' + SW .* (1 - deltaX') ;
+    N = NE .* deltaX' + NW .* (1 - deltaX') ;
+    V = N .* deltaY' + S .* (1 - deltaY') ;
+    sourceGrayVals = V;
+    
+    %out of range gets color black. indx and indy were calculated at the begining
+    sourceGrayVals(indx) = 0;
+    sourceGrayVals(indy) = 0;
 end
-

@@ -16,12 +16,12 @@ pics = {'lena.tif';'im2.tif';'addedScissors.tif';'barbarasmall.tif';'cups.tif';'
 % showImage(img);
 % showImage(newImage);
 
-%%SCALE
-imgName = char(pics(1));
-img = readImage(imgName);
-newImage = scaleImage(img, 1.5, 128, 128);
-showImage(img);
-showImage(newImage);
+%%%SCALE
+% imgName = char(pics(1));
+% img = readImage(imgName);
+% newImage = scaleImage(img, 1.5, 128, 128);
+% showImage(img);
+% showImage(newImage);
 
 % %%%AFFINE
 %     img = readImage('seagray.tif');
@@ -34,13 +34,29 @@ showImage(newImage);
 %     showImage(img);
 %     showImage(newimg);
 
-
+%%% INTERPOLATE
+%     img = [1 2 3; 4 5 6 ; 7 8 9];
+%     sourceCoors = [ 0.3, 1.6, 1.7, 2.2; 0.4, 1.4, 2.3, 1.5 ];%capture 3X3 first
+    img = readImage('im2.tif');
+    newSize = size(img);
+    r = newSize(1);
+    c = newSize(2);
+    [X,Y] = meshgrid(1:c, 1:r); 
+    sourceCoors = [X(:) Y(:)]';
+    newimg = interpolate(img, sourceCoors);
+    newimg = reshape(newimg, [r, c]);%getting a vector in the size 1X(RxC) -> reshape to image  
+    showImage(img);
+    showImage(newimg);
+    temp = img - newimg;
+    clear;
+    close all;
+    clc;
 
 
 
 %Q1 meshgrid - in pdf its mesh(1:c, 1:r). in Hw its mesh(1:x, 1:y)
-%Q2 in rotate: degrees ?
-%Q3 in scale: a =b ? the scale matrix is [a 0; 0 a] ?
+%Q2 IMPORTANT - how do i get r and c in interpolate ??? is the size(img) good ?
+%Q3 notice the check of out of bounds in INTERPOLATE its backwards
 
 %TODO
 % change creation of matrices in ROTATE and SCALE. do M^-1 dirrect
