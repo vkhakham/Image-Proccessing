@@ -32,27 +32,15 @@ function newimg = scaleImage(img,s,centerX,centerY,newSize)
     c = newSize(2);
     
     %calculate scale matrix^-1(named Sinv)
-	%delete calculate Scale matrix here - try to calc S^-1 directly
-    S = [ s,0 ; 0,s];%delete
-    SinvNotDirect = inv(S);%delete
     Sinv = [1/s,0; 0,1/s];
-    %delete if clause
-    if(isequal(Sinv, SinvNotDirect) )
-        display('same');
-    else
-        Sinv
-        SinvNotDirect
-        display('diff');
-    end
     
     %calc source coordinates
-    
     [X,Y] = meshgrid(1:c, 1:r);%arrange the target pixels in 2XN shape
     
     %shift pixels that 0,0 will be centerX,centerY
     X = X - centerX;
     Y = Y - centerY;
-    sourceCoors = SinvNotDirect*[X(:) Y(:)]';%locate source pixel for each target pixel
+    sourceCoors = Sinv*[X(:) Y(:)]';%locate source pixel for each target pixel
     
     %shift pixels back
     sourceCoors(1,:) = sourceCoors(1,:) + centerX;
@@ -61,5 +49,4 @@ function newimg = scaleImage(img,s,centerX,centerY,newSize)
     %interpolate colors
     newimg = interpolateUsingNN(img, sourceCoors);%temp script thats using NN instead of bilinear
     newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
-
 end

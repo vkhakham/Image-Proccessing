@@ -9,7 +9,8 @@
 % img - a grayscale image in the range [0..255]
 % sourceCoors – a 2XN array of coordinates [x,y]' in the source image (img)
 % 
-% Output:    sourceGrayVals – a 1XN vector of gray values.
+% Output:    
+% sourceGrayVals – a 1XN vector of gray values.
 % 
 % Method:Performs Bilinear interpolation to evaluate the gray value of the sourceCoors
 % within image img. Uses Matrix operations only when computing interpolation.

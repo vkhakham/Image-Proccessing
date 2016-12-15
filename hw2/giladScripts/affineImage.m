@@ -26,29 +26,32 @@
 % the image) should be painted black (0).
 function newimg = affineImage(img,sourceCoors,targetCoors,newSize)
     
-    if(nargin == 4)
+    if(nargin == 3)
         newSize = size(img);
     end
     r = newSize(1);
     c = newSize(2);
     
-    [~,N] = size(sourceCoors); %num of rows in Xmatrix
-    Xmat = ones(N*2, 6);
-%     for i=1 : N %replace with no loop
-%         Xmat(2*i-1,:) = [sourceCoors(1,i) , sourceCoors(2,i), 0, 0, 1 ,0];
-%         Xmat(2*i,:)   = [0, 0, sourceCoors(1,i) , sourceCoors(2,i), 0 ,1];
-%     end
-    Xmat(1:2:end) = zeros(N*2, 1);
+    [~,N] = size(sourceCoors); %N = num of coordinates
+    N = N*2; %N is number of rows in X matrix
     
-    Xtag = targetCoors(:); %xtag is targetCoors in vector
+    %building Xmat
+    Xmat = zeros(N, 6);
+    EVEN = 2:2:N;
+    ODD  = 1:2:N;
+    Xmat(ODD,1:2) = sourceCoors';
+    Xmat(ODD,5) = 1;
+    Xmat(EVEN,3:4) = sourceCoors';
+    Xmat(EVEN,6) = 1;
+    
+    Xtag = targetCoors(:); %xtag is targetCoors in a vector shape
     A = pinv(Xmat)*Xtag; % values a-f of matrix A
     A = [A(1) A(2) A(5); A(3) A(4) A(6); 0 0 1]; % allighn a-f values and pad last line
-    Ainv = inv(A); % get Invese A
     
     [X,Y] = meshgrid(1:c, 1:r);%create clean image in the size of newSize
     O = ones(1,r*c);%vector of ones. pad meshgrid
-    
-    sourceCoorsOfNewPicture = Ainv*[X(:) Y(:) O(:)]';%locate source pixel for each target pixel
+
+    sourceCoorsOfNewPicture = inv(A)*[X(:) Y(:) O(:)]';%locate source pixel for each target pixel
     sourceCoorsOfNewPicture = sourceCoorsOfNewPicture(1:2 , :);%remove last line of picture matrix
     
     %interpolate colors
