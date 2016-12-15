@@ -1,4 +1,3 @@
-
 %authors: 
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
@@ -30,20 +29,39 @@ function newimg = rotateImage(img,theta,centerX,centerY,newSize)
     r = newSize(1);
     c = newSize(2);
     
+    %calculate rotate matrix^-1(named Tinv)
+	%delete create T^-1 instead of T and inv(T)
     T = [cosd(theta),sind(theta);-sind(theta),cosd(theta)]; %delete. check that T^-1(theta) = T(-theta) always true
-    Tinverse = inv(T);
+    TinvNotDirect = inv(T);%delete
+    Tinv = [cosd(-theta),sind(-theta);-sind(-theta),cosd(-theta)];
+    %delete if clause
+    if(isequal(Tinv, TinvNotDirect) )
+        display('same');
+    else
+        Tinv
+        TinvNotDirect
+        display('diff');
+    end
+    
     %calc source coordinates
+    
     [X,Y] = meshgrid(1:c, 1:r);%arrange the target pixels in 2XN shape
+    
+    %shift pixels that 0,0 will be centerX,centerY
     X = X - centerX;
     Y = Y - centerY;
-    sourceCoors = Tinverse*[X(:) Y(:)]';%locate source pixel for each target pixel
+    sourceCoors = TinvNotDirect*[X(:) Y(:)]';%locate source pixel for each target pixel
+    
+    %shift pixels back
     sourceCoors(1,:) = sourceCoors(1,:) + centerX;
     sourceCoors(2,:) = sourceCoors(2,:) + centerY;
  
+    %interpolate colors
     newimg = interpolateUsingNN(img, sourceCoors);%temp script thats using NN instead of bilinear
     newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
 
-    %%%% check what matlab prepared function create
+    %%%% check what matlab prepared function create. i think it arournd
+    %%%% the middle pixel
 %     angle = theta;
 %     B = imrotate(img,angle,'nearest');
 %     showImage(B);
