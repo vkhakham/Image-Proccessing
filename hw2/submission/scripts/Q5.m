@@ -52,7 +52,7 @@ imgC = readImage('railroad.tif');
 [x,y] = size(imgC);
 imgCsmaller = scaleImage(imgC, 0.25, 1, 1, [x/4, y/4]);%the pic is to big. shrink to 1/4
 showImage(imgCsmaller);
-%sourceCoors = ginput(4)'; 
+% sourceCoors = ginput(4)'; 
 sourceCoors = [10 123 139 244; 252 151 151 248 ];
 targetCoors = [ 1,1,256,256 ; 256,1,1,256];
 % save('Q5C_sourceAndTargetCoords.mat', 'sourceCoors', 'targetCoors');
@@ -67,6 +67,18 @@ clear;
 %% Provide the BODEK with an effective way to show this example, i.e. to prove
 %% that indeed the the source is mapped to the target.
 %%D1
+imgD = readImage('lena.tif');
+showImage(imgD);
+sourceCoors = [1 256 256 1; 1 1 256 256];
+targetCoors = [1 256 256 1; 1 1 256 256]; 
+newimgD = affineImage(imgD, sourceCoors, targetCoors);
+showImage(newimgD);
+imgD = round((imgD*1000))/1000;
+newimgD = round((newimgD*1000))/1000;
+display(isequal(imgD,newimgD));
+clear;
+
+% % D2
 imgD = readImage('seagray.tif');
 showImage(imgD);
 sourceCoors = [98 234 209 74; 22 161 230 85]; %for pic seagray   
@@ -78,7 +90,7 @@ newimgD = affineImage(imgD, sourceCoors, targetCoors2);
 showImage(newimgD);
 clear;
 
-%%D2
+%%D3
 imgD = readImage('lena.tif');
 showImage(imgD);
 [x,y] = size(imgD);

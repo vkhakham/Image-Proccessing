@@ -21,8 +21,17 @@ function sourceGrayVals = interpolate(img,sourceCoors)
     Xs = sourceCoors(1,:);
     Ys = sourceCoors(2,:);
 
+    %alpha correction. we think if a pixel coords are 20,256.0001(out of bound)
+    %shoudn't be color 0, but should be the color of pixel 20,256
+    alpha = 0.5;%we chose the alpha. basicly, taking out or range pixels in alpha back in the picture
+    Xs(Xs>1-alpha & Xs<1) = 1;
+    Xs(Xs>c & Xs<c+alpha) = c;
+    
+    Ys(Ys>1-alpha & Ys<1) = 1;
+    Ys(Ys>r & Ys<r+alpha) = r;
+        
     %out of range fix x
-    indx = find(Xs<1 | Xs>c);%think to do Xs<0 | Xs>r+1
+    indx = find(Xs<1 | Xs>c);
     Xs(indx) = 1;
     Ys(indx) = 1;
     
@@ -34,7 +43,7 @@ function sourceGrayVals = interpolate(img,sourceCoors)
     
     %preparing neighbours vectors
     %could have spared the next 4 vars but saved time instead of writing
-    %twice each var below (leading to floor of a giant vector calculated twise
+    %twice each var below (leading to floor of a giant vector calculated twice
     floorX = floor(Xs);
     floorY = floor(Ys);
     ceilX = ceil(Xs);
