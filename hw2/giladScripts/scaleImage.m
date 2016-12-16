@@ -47,6 +47,12 @@ function newimg = scaleImage(img,s,centerX,centerY,newSize)
     sourceCoors(2,:) = sourceCoors(2,:) + centerY;
  
     %interpolate colors
-    newimg = interpolateUsingNN(img, sourceCoors);%temp script thats using NN instead of bilinear
-    newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
+    newimg = interpolate(img, sourceCoors);% bilinear interp
+    newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image(r,c)
+    
+%     TEST Bilinear VS Nearest neighbour     
+%     newimg2 = interpolateUsingNN(img, sourceCoors);%temp script thats using NN instead of bilinear
+%     newimg2 = reshape(newimg2, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
+%     showImage(newimg);
+%     showImage(newimg2);
 end

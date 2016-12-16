@@ -55,6 +55,12 @@ function newimg = affineImage(img,sourceCoors,targetCoors,newSize)
     sourceCoorsOfNewPicture = sourceCoorsOfNewPicture(1:2 , :);%remove last line of picture matrix
     
     %interpolate colors
-    newimg = interpolateUsingNN(img, sourceCoorsOfNewPicture);%temp script thats using NN instead of bilinear
-    newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
+    newimg = interpolate(img, sourceCoorsOfNewPicture);% bilinear interp
+    newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image(r,c)
+    
+%     TEST Bilinear VS Nearest neighbour 
+%     newimg2 = interpolateUsingNN(img, sourceCoorsOfNewPicture);%temp script thats using NN instead of bilinear
+%     newimg2 = reshape(newimg2, r, c);%getting a vector in the size 1X(RxC) -> reshape to image  
+%     showImage(newimg);
+%     showImage(newimg2);
 end
