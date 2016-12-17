@@ -73,8 +73,6 @@ sourceCoors = [1 256 256 1; 1 1 256 256];
 targetCoors = [1 256 256 1; 1 1 256 256]; 
 newimgD = affineImage(imgD, sourceCoors, targetCoors);
 showImage(newimgD);
-imgD = round((imgD*1000))/1000;
-newimgD = round((newimgD*1000))/1000;
 display(isequal(imgD,newimgD));
 clear;
 

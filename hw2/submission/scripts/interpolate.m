@@ -16,6 +16,7 @@
 % within image img. Uses Matrix operations only when computing interpolation.
 % Pixels that have no source (outside the image) should assigned gray value 0 
 function sourceGrayVals = interpolate(img,sourceCoors) 
+    img = double(img);
     [r,c] = size(img);
    
     Xs = sourceCoors(1,:);
@@ -91,4 +92,5 @@ function sourceGrayVals = interpolate(img,sourceCoors)
     %out of range gets color black. indx and indy were calculated at the begining
     sourceGrayVals(indx) = 0;
     sourceGrayVals(indy) = 0;
+    sourceGrayVals = uint8(sourceGrayVals);
 end
