@@ -24,7 +24,7 @@ function sourceGrayVals = interpolate(img,sourceCoors)
 
     %alpha correction. we think if a pixel coords are 20,256.0001(out of bound)
     %shoudn't be color 0, but should be the color of pixel 20,256
-    alpha = 0.5;%we chose the alpha. basicly, taking out or range pixels in alpha back in the picture
+    alpha = 0.51;%we chose the alpha. basicly, taking out or range pixels in alpha back in the picture
     Xs(Xs>1-alpha & Xs<1) = 1;
     Xs(Xs>c & Xs<c+alpha) = c;
     
@@ -93,4 +93,5 @@ function sourceGrayVals = interpolate(img,sourceCoors)
     sourceGrayVals(indx) = 0;
     sourceGrayVals(indy) = 0;
     sourceGrayVals = uint8(sourceGrayVals);
+    sourceGrayVals = sourceGrayVals';
 end
