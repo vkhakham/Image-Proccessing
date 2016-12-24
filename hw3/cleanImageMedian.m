@@ -24,22 +24,19 @@ function cleanIm = cleanImageMedian (im, maskRadius)
 %     im = readImage('im2.tif');
 %     maskRadius = [1,1];
     [r,c] = size(im);
-    cleanIm = zeros(r,c);
-    xRad = maskRadius(1);
-    yRad = maskRadius(2);
-    for i=1 : r
-        for j=1 : c
-            %it was asked to give zero to all pixel where the neighborhood
-            % extends beyond the bounds of the image
-            if((i-xRad < 1) || (i+xRad > r) || (j-yRad < 1) || (j+yRad > c))
-               cleanIm(i,j) = 0;
-            %valid neighborhood - put median value
-            else
-                neighborhoodMatrix = im((i-xRad) : (i+xRad), (j-yRad) : (j+yRad));
-                cleanIm(i,j) = median(neighborhoodMatrix(:));
-            end
+    cleanIm = zeros(r,c);%out pic, whoever has neighborhood out of bound, remain 0
+    xRad = maskRadius(1);%x radius
+    yRad = maskRadius(2);%y radius
+    %no need to look from 1 to r -> was asked to leave pixel their neighborhood extends beyond the bounds of the image
+    for i=1+xRad : r - xRad 
+        %no need to look from 1 to c from the same reason
+        for j=1+yRad : c - yRad
+            neighborhoodMatrix = im((i-xRad) : (i+xRad), (j-yRad) : (j+yRad));
+            cleanIm(i,j) = median(neighborhoodMatrix(:));
         end
     end
+    cleanIm = uint8(cleanIm);
+    showImage(cleanIm);
 end
 
 %1 Set to zero all boundary pixels (pixels where the neighborhood extends
