@@ -3,12 +3,17 @@
 % Gilad Eini   , id 034744920
 % script that answers question 5
 
+% %saltAndPepperNoise
+% img = readImage('im2.tif');
+% showImage(img);
+% saltAndPepperNoiseImg = addSPnoise(img,0.01);
+% showImage(saltAndPepperNoiseImg);
 
+%addGaussianNoise
 img = readImage('im2.tif');
 showImage(img);
-saltAndPepperNoiseImg = addSPnoise(img,0.01);
-showImage(saltAndPepperNoiseImg);
-
+gaussianNoiseImg = addGaussianNoise(img,15);
+showImage(gaussianNoiseImg);
 
 % pause;
 clear;
