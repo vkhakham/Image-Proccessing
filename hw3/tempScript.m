@@ -2,8 +2,11 @@
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
 % script that answers question 5
+clear;
+close all;
+clc;
 
-% %saltAndPepperNoise
+%saltAndPepperNoise
 % img = readImage('im2.tif');
 % showImage(img);
 % saltAndPepperNoiseImg = addSPnoise(img,0.01);
@@ -16,12 +19,20 @@
 % showImage(gaussianNoiseImg);
 
 % %addMotionBlur
-% img = readImage('im2.tif');
+% img = readImage('lena.tif');
+% % img = readImage('im2.tif');
 % showImage(img);
-% motionBlurImg = addMotionBlur(img,15);
+% motionBlurImg = addMotionBlur(img,20);
 % showImage(motionBlurImg);
 
-
+%cleanImageMedian
+img = readImage('lena.tif');
+% img = readImage('im2.tif');
+showImage(img);
+saltAndPepperNoiseImg = addSPnoise(img,0.01);
+showImage(saltAndPepperNoiseImg);
+cleanImageMedianImg = cleanImageMedian(saltAndPepperNoiseImg, [1,1]);
+showImage(cleanImageMedianImg);
 
 % pause;
 clear;

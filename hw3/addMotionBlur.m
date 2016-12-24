@@ -27,10 +27,12 @@ function noisyIm = addMotionBlur(im,t)
 %     showImage(im);
 %     im = [ 1 2 3 ; 4 5 6 ; 7 8 9];
 %     t = 15;
-    mask = ones(t,1)' / t; %creating average horizontal mask
+    mask = ones(1,t) / t; %creating average horizontal mask
     noisyIm = conv2(im,mask,'same'); %convolotion im and mask. zero padding and same size
+    noisyIm = uint8(noisyIm);
 %     showImage(noisyIm);
 end
 
 %check 'a neighborhood 1 X t'. is it ment the mask on columns ? if so, add mask = mask';
 %since the camera goes on X direction, shouldn't the mask be tX1 ?
+
