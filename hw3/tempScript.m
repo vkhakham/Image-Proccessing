@@ -9,11 +9,19 @@
 % saltAndPepperNoiseImg = addSPnoise(img,0.01);
 % showImage(saltAndPepperNoiseImg);
 
-%addGaussianNoise
-img = readImage('im2.tif');
-showImage(img);
-gaussianNoiseImg = addGaussianNoise(img,15);
-showImage(gaussianNoiseImg);
+% %addGaussianNoise
+% img = readImage('im2.tif');
+% showImage(img);
+% gaussianNoiseImg = addGaussianNoise(img,15);
+% showImage(gaussianNoiseImg);
+
+% %addMotionBlur
+% img = readImage('im2.tif');
+% showImage(img);
+% motionBlurImg = addMotionBlur(img,15);
+% showImage(motionBlurImg);
+
+
 
 % pause;
 clear;
