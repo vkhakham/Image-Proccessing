@@ -25,6 +25,12 @@ function cleanIm = cleanImageMean (im, maskRadius, maskSTD)
 %     maskRadius = [3,3];
 %     maskSTD = 2;
 %     
+% [x,y] = meshgrid(-radius:radius,-radius:radius);
+% mask = exp(-x.^2/(2*maskSTD^2)-y.^2/(2*maskSTD^2));
+% su = sum(sum(mask));
+% mask = mask ./ su;
+% 
+% cleanIm = conv2(im,mask,'same');
 %     
 %     gaussianMask = maskSTD * randn(maskRadius(1),maskRadius(2));%randn will get values normaly disterbuted with std 1
 %     cleanIm = conv2(im,gaussianMask,'same'); %convolotion im and mask.
