@@ -17,5 +17,15 @@
 % across corresponding pixels of the sequence, to create a single denoised image.                                  
 % You may loop over the image pixels. You may use matlab function mean.
 function cleanIm = cleanImageMean_multi (imArray)
-
+    [r,c,~] = size(imArray);
+    cleanIm = zeros(r,c);%static declaration
+    
+    
+    for i=1 : r 
+        for j=1 : c 
+            cleanIm(i,j) = mean(imArray(i,j,:));
+        end
+    end
+    
+    cleanIm = uint8(cleanIm);
 end

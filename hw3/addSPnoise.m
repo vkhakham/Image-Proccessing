@@ -33,7 +33,7 @@
 
     noisyIm = im; % get all colors
     noisyIm(noiseVec == 1) = 0; % change the indexes from noiseVec==1 to black noise
-    noisyIm(noiseVec == 2) = 256;% change the indexes from noiseVec==2 to white noise
+    noisyIm(noiseVec == 2) = 255;% change the indexes from noiseVec==2 to white noise
 %     showImage(noisyIm);
     noisyIm = uint8(noisyIm);
     

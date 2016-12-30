@@ -21,5 +21,10 @@
 % http://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio)
 % Do not use matlab function PSNR.
 function PSNRval= calcPSNR (noisyIm,im)
-
+    %MSE sum of all squares between pixels of im and noisyIm. normalize in
+    %size of im
+    MSE = sum( sum(((noisyIm - im).^2)/ length(im(:) )));
+    
+    %PNSR - https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio
+    PSNRval = 20 * log10(255)  - 10 * log10(MSE);
 end

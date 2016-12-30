@@ -20,19 +20,14 @@
 % Use matlab function conv2.
 % 
 function cleanIm = cleanImageMean (im, maskRadius, maskSTD)
-%     im = readImage('im2.tif');
-%     im = randi(256,5) -1 ;
-%     maskRadius = [3,3];
-%     maskSTD = 2;
-%     
-% [x,y] = meshgrid(-radius:radius,-radius:radius);
-% mask = exp(-x.^2/(2*maskSTD^2)-y.^2/(2*maskSTD^2));
-% su = sum(sum(mask));
-% mask = mask ./ su;
-% 
-% cleanIm = conv2(im,mask,'same');
-%     
-%     gaussianMask = maskSTD * randn(maskRadius(1),maskRadius(2));%randn will get values normaly disterbuted with std 1
-%     cleanIm = conv2(im,gaussianMask,'same'); %convolotion im and mask.
-%     cleanIm = uint8(cleanIm);
+    xRad = maskRadius(1);%x radius
+    yRad = maskRadius(2);%y radius
+    im = double(im);%conv2 need a double im
+    % create two matrices of x and y's distance from center.
+    [X,Y] = meshgrid(-xRad:xRad,-yRad:yRad);
+    mask = exp( - (X.^2 + Y.^2) / (2*maskSTD^2) );%formula from class
+    mask = mask ./ sum(mask(:)); %normalize to keep the Sum the same
+
+    cleanIm = conv2(im,mask,'same');
+    cleanIm = uint8(cleanIm);
 end

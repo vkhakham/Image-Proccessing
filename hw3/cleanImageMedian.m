@@ -36,7 +36,7 @@ function cleanIm = cleanImageMedian (im, maskRadius)
         end
     end
     cleanIm = uint8(cleanIm);
-    showImage(cleanIm);
+%     showImage(cleanIm);
 end
 
 %1 Set to zero all boundary pixels (pixels where the neighborhood extends
