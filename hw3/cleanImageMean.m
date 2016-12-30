@@ -20,13 +20,15 @@
 % Use matlab function conv2.
 % 
 function cleanIm = cleanImageMean (im, maskRadius, maskSTD)
+
+    im = double(im);%conv2 need a double im. 
     xRad = maskRadius(1);%x radius
     yRad = maskRadius(2);%y radius
-    im = double(im);%conv2 need a double im
+    
     % create two matrices of x and y's distance from center.
     [X,Y] = meshgrid(-xRad:xRad,-yRad:yRad);
     mask = exp( - (X.^2 + Y.^2) / (2*maskSTD^2) );%formula from class
-    mask = mask ./ sum(mask(:)); %normalize to keep the Sum the same
+    mask = mask / sum(mask(:));%normalize to keep the Sum the same
 
     cleanIm = conv2(im,mask,'same');
     cleanIm = uint8(cleanIm);

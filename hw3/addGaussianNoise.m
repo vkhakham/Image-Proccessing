@@ -18,13 +18,10 @@
 % of std s. Do not loop over image pixels. Use matlab function randn.
 %
 function noisyIm = addGaussianNoise(im, s)
-%     im = readImage('im2.tif');
-%     im = [ 1 2 3 ; 4 5 6 ; 7 8 9];
-%     s = 500;
-    gaussianNoise = s * randn(size(im));%randn will get values normaly disterbuted with std 1
+
+    im = double(im);%just in case. saw some error in other functions
+    
+    gaussianNoise = s * randn(size(im));%randn will get values normaly disterbuted and than multiply with std
     noisyIm = im + gaussianNoise;%add a random value which is chosen from a Gaussian distribution of std s
     noisyIm = uint8(noisyIm);%take care of rounding doubles and change all above 255 to 255 and all below 0 to 0(8bit unsighned int)
-%     showImage(noisyIm);
 end
-
-%check with others if std has to be at least 15 to notice a diffrenece

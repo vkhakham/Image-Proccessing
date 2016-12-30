@@ -76,8 +76,14 @@ clc;
 % cleanImg = cleanImageMean_multi(imArray);
 % showImage(cleanImg);
 
-
-
+% %9calcPSNR
+% img = readImage('lena.tif');
+% % img = readImage('im2.tif');
+% showImage(img);
+% blurImg = addMotionBlur(img,7);
+% showImage(blurImg);
+% psnr = calcPSNR(blurImg, img);
+% disp(psnr);
 % pause;
 % clear;
 % close all;

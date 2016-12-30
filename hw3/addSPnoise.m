@@ -14,14 +14,13 @@
 % NoisyIm - grayscale image in the range [0..255] same size as im
 % 
 % Method:  
-% p/2 pixels are randomly chosen as 0 and p/2 as 255. Do not loop over 
-% image pixels. Use matlab function rand.
+% p/2 pixels are randomly chosen as 0 and p/2 as 255.
+% Do not loop over image pixels. 
+% Use matlab function rand.
 %
  function noisyIm = addSPnoise(im, p)
-%     im = readImage('im2.tif');
-%     im = [ 1 2 3 ; 4 5 6 ; 7 8 9];
-%     p = 0.5;
-%     showImage(im);
+    im = double(im);%just in case. saw some error in other functions
+    
     n = round((p/2)*length(im(:)));%fraction of noise for white and black.
     
     %noiseVec will be used for indexes of the noise.
@@ -34,9 +33,6 @@
     noisyIm = im; % get all colors
     noisyIm(noiseVec == 1) = 0; % change the indexes from noiseVec==1 to black noise
     noisyIm(noiseVec == 2) = 255;% change the indexes from noiseVec==2 to white noise
-%     showImage(noisyIm);
     noisyIm = uint8(noisyIm);
     
  end
- 
- %TODO - think how to set 'n' more accuaratly

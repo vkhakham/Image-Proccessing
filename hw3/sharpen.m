@@ -20,13 +20,6 @@
 % Gaussian parameters as the blur kernel.               
 % Use matlab function conv2.
 function sharpIm = sharpen(im, maskRadius, maskSTD, lambda)
-
-%     im = readImage('im2.tif');
-%     maskRadius = [1,1];
-%     maskSTD = 2;
-%     lambda = 1;
-
-
     im = double(im);%conv2 need a double im
     
     %MAKE GAUS MASK
@@ -34,7 +27,7 @@ function sharpIm = sharpen(im, maskRadius, maskSTD, lambda)
     yRad = maskRadius(2);%y radius
     [X,Y] = meshgrid(-xRad:xRad,-yRad:yRad);% create two matrices of x and y's distance from center.
     mask = exp( - (X.^2 + Y.^2) / (2*maskSTD^2) );%formula from class
-    mask = mask ./ sum(mask(:)); %normalize to keep the Sum the same
+    mask = mask / sum(mask(:)); %normalize to keep the Sum the same
     
     %MAKE DELTA Mat
     deltaMat = zeros( xRad*2 + 1, yRad*2 + 1);

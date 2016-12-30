@@ -16,13 +16,14 @@
 % PSNRval – a Real value expressing the PSNR of noisyIm.
 % 
 % Method: Peak-Signal-to-Noise-Ratio evaluates the difference between 2 images.
-% Calculate Peak-Signal-to-Noise-Ratio using the PSNR definition here:                
-% http://www.mathworks.com/help/vision/ref/psnr.html 
-% http://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio)
-% Do not use matlab function PSNR.
+% 
 function PSNRval= calcPSNR (noisyIm,im)
-    %MSE sum of all squares between pixels of im and noisyIm. normalize in
-    %size of im
+    
+    %we had an error on combining ints with non ints
+    im = double(im);
+    noisyIm = double(noisyIm);
+    
+    %MSE sum of all squares between pixels of im and noisyIm. normalize in size of im
     MSE = sum( sum(((noisyIm - im).^2)/ length(im(:) )));
     
     %PNSR - https://en.wikipedia.org/wiki/Peak_signal-to-noise_ratio

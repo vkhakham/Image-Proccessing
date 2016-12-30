@@ -17,18 +17,11 @@
 % across corresponding pixels of the sequence, to create a single denoised image.                                  
 % You may loop over the image pixels. You may used matlab function median.
 function cleanIm = cleanImageMedian_multi (imArray)
-%     im1 = [ 1 2 3 ; 4 2 6 ; 7 8 10];
-%     im2 = [ 1 2 3 ; 4 5 6 ; 7 8 9];
-%     im3 = [ 1 4 3 ; 4 5 6 ; 7 8 9];
-%     imArray(:,:,1) = im1;
-%     imArray(:,:,2) = im2;
-%     imArray(:,:,3) = im3;
-    
-    
+
     [r,c,~] = size(imArray);
     cleanIm = zeros(r,c);%static declaration
     
-    
+    %iterate on all pixels and make median from the frames i,j pixel
     for i=1 : r 
         for j=1 : c 
             cleanIm(i,j) = median(imArray(i,j,:));

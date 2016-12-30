@@ -20,7 +20,7 @@ function cleanIm = cleanImageMean_multi (imArray)
     [r,c,~] = size(imArray);
     cleanIm = zeros(r,c);%static declaration
     
-    
+    %iterate on all pixels and make mean from the frames i,j pixel
     for i=1 : r 
         for j=1 : c 
             cleanIm(i,j) = mean(imArray(i,j,:));
