@@ -33,6 +33,5 @@ function noisyIm = addMotionBlur(im,t)
 %     showImage(noisyIm);
 end
 
-%check 'a neighborhood 1 X t'. is it ment the mask on columns ? if so, add mask = mask';
-%since the camera goes on X direction, shouldn't the mask be tX1 ?
+
 
