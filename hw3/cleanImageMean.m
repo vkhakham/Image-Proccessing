@@ -25,6 +25,7 @@ function cleanIm = cleanImageMean (im, maskRadius, maskSTD)
     xRad = maskRadius(1);%x radius
     yRad = maskRadius(2);%y radius
     
+    %MAKE GUAS MASK
     % create two matrices of x and y's distance from center.
     [X,Y] = meshgrid(-xRad:xRad,-yRad:yRad);
     mask = exp( - (X.^2 + Y.^2) / (2*maskSTD^2) );%formula from class
