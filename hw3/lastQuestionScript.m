@@ -104,17 +104,16 @@ lightHouseIm = readImage('lighthouse.tif');
 % showImage(im);
 % imSP = addSPnoise(im,0.2);
 % showImage(imSP);
-% iters = 3; 
-% PSNRarray = zeros(iters,1);
-% for i=1 : iters
+% PSNRarray = zeros(10,1);
+% for i=1 : 10
 %     cleanIm = cleanImageMedian(imSP,[i,i]);
 % %    showImage(cleanIm);
 %     PSNRarray(i) = calcPSNR(cleanIm,imSP); 
 % end
 % 
 % figure
-% plot(1:length(PSNRarray),PSNRarray);
-% title('PSNR values between original and median-denoised image');
+% plot(1:10,PSNRarray);
+% title('d)PSNR values between original and median-denoised image');
 % xlabel('maskSTD');
 % ylabel('PNSR');
 
@@ -134,18 +133,17 @@ lightHouseIm = readImage('lighthouse.tif');
 % im = lenaIm;
 % showImage(im);
 % imG = addGaussianNoise(im,10);
-% showImage(imG);
-% iters = 3; 
-% PSNRarray = zeros(iters,1);
-% for i=1 : iters
+% showImage(imG); 
+% PSNRarray = zeros(10,1);
+% for i=1 : 10
 %     cleanIm = cleanImageMean(imG,[1,1],i);
 %     showImage(cleanIm);
 %     PSNRarray(i) = calcPSNR(cleanIm,imG); 
 % end
 % 
 % figure
-% plot(1:length(PSNRarray),PSNRarray);
-% title('PSNR values between original and mean-denoised image');
+% plot(1:10,PSNRarray);
+% title('e)PSNR values between original and mean-denoised image');
 % xlabel('maskSTD');
 % ylabel('PNSR');
 
@@ -157,7 +155,28 @@ lightHouseIm = readImage('lighthouse.tif');
 % *Display resulting denoised images and their PSNR.
 % *Which filtering approach works best for Gaussian noise? 
 %     Print your answer on screen.
+
+% % TODO look for better pic and parameters to show bigger dif
+% % TODO print out answer
 % 
+% im = lenaIm;
+% showImage(im);
+% for i=1 : 10
+%     gaussianNoiseImg = addGaussianNoise(im,30);
+%     imArray(:,:,i) = gaussianNoiseImg;
+% %     showImage(gaussianNoiseImg);
+% end
+% cleanImgmean = cleanImageMean_multi(imArray);
+% showImage(cleanImgmean);
+% disp(['f) psnr: original VS cleanImageMean_multi=',num2str(calcPSNR(im, cleanImgmean))]);
+% cleanImgmedian = cleanImageMedian_multi(imArray);
+% showImage(cleanImgmedian);
+% disp(['f) psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
+% 
+% pause;
+% clear im cleanImgmedian cleanImgmean imArray i gaussianNoiseImg;
+% close all;
+
 % g)   
 % *Create an image array from an image by creating several S&P-noised 
 %     versions of it.
@@ -166,7 +185,28 @@ lightHouseIm = readImage('lighthouse.tif');
 % *Display resulting denoised images and their PSNR.
 % *Which filtering approach works best for Gaussian noise?
 %     Print your answer on screen.
+
+% TODO look for better pic and parameters to show bigger dif
+% TODO print out answer
+
+% im = lenaIm;
+% showImage(im);
+% for i=1 : 10
+%     saltAndPepperNoiseImg = addSPnoise(im,0.01);
+%     imArray(:,:,i) = saltAndPepperNoiseImg;
+% %     showImage(gaussianNoiseImg);
+% end
+% cleanImgmean = cleanImageMean_multi(imArray);
+% showImage(cleanImgmean);
+% disp(['f) psnr: original VS cleanImageMean_multi=',num2str(calcPSNR(im, cleanImgmean))]);
+% cleanImgmedian = cleanImageMedian_multi(imArray);
+% showImage(cleanImgmedian);
+% disp(['f) psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
 % 
+% pause;
+% clear im cleanImgmedian cleanImgmean imArray i saltAndPepperNoiseImg;
+% close all;
+
 % h)  
 % *Plot the PSNR values between original and denoised image as a function of
 %     the number of frames in the image array. Use S&P noise and use the 
@@ -174,8 +214,40 @@ lightHouseIm = readImage('lighthouse.tif');
 % *Use matlab function plot. Use matlab functions title, xlabel and ylabel to
 %     display axis description.
 % *Print your explanation for the behavior of the graph.
+
+% % TODO see my guess is valid - median is better for S&P noise
 % 
+% im = lenaIm;
+% showImage(im);
+% %making j imArrays. the first, multiImArray(:,:,:,1) will be an imArray with 1
+% %frame, the second,multiImArray(:,:,:,2) 2 frames and so on
+% for j=1 : 3
+%     for i=1 : j
+%     saltAndPepperNoiseImg = addSPnoise(im,0.01);
+%     multiImArray(:,:,i,j) = saltAndPepperNoiseImg;
+% %     showImage(saltAndPepperNoiseImg);
+%     end 
+% end
 % 
+% PSNRarray = zeros(3,1);
+% for i=1 : 3
+%     %1:i - selecting from the array the size of the i'th iteration frames.
+%     imArray = multiImArray(:,:,1:i,i);
+%     cleanIm = cleanImageMedian_multi(imArray);
+%     showImage(cleanIm);
+%     PSNRarray(i) = calcPSNR(cleanIm,im); 
+% end
+% 
+% figure
+% plot(1:3,PSNRarray);
+% title('h)PSNR values between original and median-denoised image');
+% xlabel('frames');
+% ylabel('PNSR');
+% 
+% pause;
+% clear im imArray j i saltAndPepperNoiseImg multiImArray PSNRarray cleanIm;
+% close all;
+ 
 % i)  
 % *Plot the PSNR values between original and denoised image as a function of 
 %     the number of frames in the image array. Use Gaussian noise and use the
@@ -183,19 +255,56 @@ lightHouseIm = readImage('lighthouse.tif');
 % *Use matlab function plot. Use matlab functions title, xlabel and ylabel to
 %     display axis description.
 % *Print your explanation for the behavior of the graph.
+
+% % TODO see my guess is valid - mean is better for gaus noise
 % 
+% im = lenaIm;
+% showImage(im);
+% %making j imArrays. the first, multiImArray(:,:,:,1) will be an imArray with 1
+% %frame, the second,multiImArray(:,:,:,2) 2 frames and so on
+% for j=1 : 3
+%     for i=1 : j
+%     gaussianNoiseImg = addGaussianNoise(im,30);
+%     multiImArray(:,:,i,j) = gaussianNoiseImg;
+% %     showImage(gaussianNoiseImg);
+%     end 
+% end
 % 
+% PSNRarray = zeros(3,1);
+% for i=1 : 3
+%     %1:i - selecting from the array the size of the i'th iteration frames.
+%     imArray = multiImArray(:,:,1:i,i);
+%     cleanIm = cleanImageMean_multi(imArray);
+%     showImage(cleanIm);
+%     PSNRarray(i) = calcPSNR(cleanIm,im); 
+% end
+% 
+% figure
+% plot(1:3,PSNRarray);
+% title('i)PSNR values between original and mean-denoised image');
+% xlabel('frames');
+% ylabel('PNSR');
+% 
+% pause;
+% clear im imArray j i gaussianNoiseImg multiImArray PSNRarray cleanIm;
+% close all;
+
 % j) 
 % *What happens when you sharpen an image that has S&P noise? 
 
+% %TODO play with parameters
+% %TODO answer - best guess is : it sharpen the S&P noise as well as the pic
+% im = lenaIm;
+% showImage(im);
+% saltAndPepperNoiseImg = addSPnoise(im,0.01);
+% showImage(saltAndPepperNoiseImg);
+% sharpenImg = sharpen(saltAndPepperNoiseImg,[1,1],5,1);
+% showImage(sharpenImg);
 
-
-
-
-% pause;
-% clear;
-% close all;
-% clc;
+pause;
+clear;
+close all;
+clc;
 
 
 
