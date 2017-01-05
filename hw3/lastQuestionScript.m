@@ -30,8 +30,8 @@ showImage(cleanImMean);
 
 
 disp(['a) psnr: original VS saltAndPepper =',num2str(calcPSNR(im, imSP))]);
-disp(['a) psnr: original VS clean median  =',num2str(calcPSNR(im, cleanImMedian))]);
-disp(['a) psnr: original VS clean mean    =',num2str(calcPSNR(im, cleanImMean))]);
+disp(['   psnr: original VS clean median  =',num2str(calcPSNR(im, cleanImMedian))]);
+disp(['   psnr: original VS clean mean    =',num2str(calcPSNR(im, cleanImMean))]);
 
 pause;
 clear im imSP cleanImMedian cleanImMean maskRad;
@@ -57,8 +57,8 @@ showImage(cleanImMedian);
 showImage(cleanImMean);
 
 disp(['b) psnr: original VS Guas blur    =',num2str(calcPSNR(im, imGaus))]);
-disp(['b) psnr: original VS clean median =',num2str(calcPSNR(im, cleanImMedian))]);
-disp(['b) psnr: original VS clean mean   =',num2str(calcPSNR(im, cleanImMean))]);
+disp(['   psnr: original VS clean median =',num2str(calcPSNR(im, cleanImMedian))]);
+disp(['   psnr: original VS clean mean   =',num2str(calcPSNR(im, cleanImMean))]);
 
 pause;
 clear im imGaus cleanImMedian cleanImMean maskRad;
@@ -70,7 +70,7 @@ close all;
 % % *Which gives the largest signal to noise? Which gives the most pleasing 
 % %     visual result in your opinion.
 
-
+disp('c)');
 disp('S&P noise: ');
 disp('	*median filter is better than mean filter');
 disp('	*median gives larger PSNR, therefor closer to original pic');
@@ -107,11 +107,11 @@ plot(1:10,PSNRarray);
 title('d)PSNR values between original and median-denoised image');
 xlabel('maskSTD');
 ylabel('PNSR');
-disp('We see a spike in neighberhood size of 2 since since the image is heavly');
-disp('noised so the close neighbehood caused some pixels to choose');
-disp('the wrong pixel and a higher neighberhood of 2 made those errors');
-disp('less likely, after neighberhood size of 2 we saw a drop of PNSR since each pixel');
-disp(' got heavly influence by further away pixels which are not as relevant.');
+disp('d)We see a spike in neighberhood size of 2 since since the image is heavly');
+disp('  noised so the close neighbehood caused some pixels to choose');
+disp('  the wrong pixel and a higher neighberhood of 2 made those errors');
+disp('  less likely, after neighberhood size of 2 we saw a drop of PNSR since each pixel');
+disp('  got heavly influence by further away pixels which are not as relevant.');
 
 pause;
 clear im imSP i PSNRarray cleanIm;
@@ -142,11 +142,11 @@ plot(1:10,PSNRarray);
 title('e)PSNR values between original and mean-denoised image');
 xlabel('maskSTD');
 ylabel('PNSR');
-disp('The higher the STD value the more importance the mean image cleans gives ');
-disp('to its neighbours, we see a spike in STD value of 2 since we would like ');
-disp('to give the neighbours some more importance since we cant rely only on');
-disp('the closest neighbours, this advatage drops off when we raise the STD value ');
-disp('and give importance to further away neighbours. ');
+disp('e) The higher the STD value the more importance the mean image cleans gives ');
+disp('   to its neighbours, we see a spike in STD value of 2 since we would like ');
+disp('   to give the neighbours some more importance since we cant rely only on');
+disp('   the closest neighbours, this advatage drops off when we raise the STD value ');
+disp('   and give importance to further away neighbours. ');
 
 pause;
 clear im imG i cleanIm PSNRarray;
@@ -173,7 +173,7 @@ showImage(cleanImgmean);
 disp(['f) psnr: original VS cleanImageMean_multi=',num2str(calcPSNR(im, cleanImgmean))]);
 cleanImgmedian = cleanImageMedian_multi(imArray);
 showImage(cleanImgmedian);
-disp(['f) psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
+disp(['   psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
 
 pause;
 clear im cleanImgmedian cleanImgmean imArray i gaussianNoiseImg;
@@ -199,10 +199,10 @@ for i=1 : 10
 end
 cleanImgmean = cleanImageMean_multi(imArray);
 showImage(cleanImgmean);
-disp(['f) psnr: original VS cleanImageMean_multi=',num2str(calcPSNR(im, cleanImgmean))]);
+disp(['g) psnr: original VS cleanImageMean_multi=',num2str(calcPSNR(im, cleanImgmean))]);
 cleanImgmedian = cleanImageMedian_multi(imArray);
 showImage(cleanImgmedian);
-disp(['f) psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
+disp(['   psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
 
 pause;
 clear im cleanImgmedian cleanImgmean imArray i saltAndPepperNoiseImg;
@@ -244,10 +244,10 @@ title('h)PSNR values between original and median-denoised image');
 xlabel('frames');
 ylabel('PNSR');
 
-disp('The higher number of frames we have to work with the more likely a pixel will regain');
-disp('its original value, since noise changes pixel values to 0 or 255 evenely, the original');
-disp('the original pixel value will be the median, the PNSR value will be closer to the original');
-disp('the more frames we have.');
+disp('h) The higher number of frames we have to work with the more likely a pixel will regain');
+disp('   its original value, since noise changes pixel values to 0 or 255 evenely, the original');
+disp('   the original pixel value will be the median, the PNSR value will be closer to the original');
+disp('   the more frames we have.');
 
 pause;
 clear im imArray j i saltAndPepperNoiseImg multiImArray PSNRarray cleanIm;
@@ -288,10 +288,10 @@ title('i)PSNR values between original and mean-denoised image');
 xlabel('frames');
 ylabel('PNSR');
 
-disp('The higher number of frames we have to work with the more likely a pixel will regain');
-disp('its original value, since noise changes pixel values to 0 or 255 evenely, the original');
-disp('the original pixel value will be the median, the PNSR value will be closer to the original');
-disp('the more frames we have.');
+disp('i) The higher number of frames we have to work with the more likely a pixel will regain');
+disp('   its original value, since noise changes pixel values to 0 or 255 evenely, the original');
+disp('   the original pixel value will be the median, the PNSR value will be closer to the original');
+disp('   the more frames we have.');
 
 pause;
 clear im imArray j i gaussianNoiseImg multiImArray PSNRarray cleanIm;
@@ -306,9 +306,9 @@ saltAndPepperNoiseImg = addSPnoise(im,0.05);
 showImage(saltAndPepperNoiseImg);
 sharpenImg = sharpen(saltAndPepperNoiseImg,[1,1],5,3);
 showImage(sharpenImg);
-disp('the SP noise gets an aura in opposite color.');
-disp('the black noise gets white aura that circles around it in the size of maskRad');
-disp('the white noise gets black aura that circles around it in the size of maskRad');
+disp('j) the SP noise gets an aura in opposite color.');
+disp('   the black noise gets white aura that circles around it in the size of maskRad');
+disp('   the white noise gets black aura that circles around it in the size of maskRad');
 
 pause;
 clear;
