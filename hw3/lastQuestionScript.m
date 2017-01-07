@@ -7,7 +7,6 @@
 clear;
 close all;
 clc;
-lenaIm = readImage('lena.tif');
 
 
 % % a)  
@@ -18,7 +17,7 @@ lenaIm = readImage('lena.tif');
 % % *Display the PSNR between the original and denoised image in each of the 2 
 % %     methods. (Either print PSNR or display it in the figure window).
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 imSP = addSPnoise(im,0.3);
 showImage(imSP);
@@ -34,7 +33,7 @@ disp(['   psnr: original VS clean median  =',num2str(calcPSNR(im, cleanImMedian)
 disp(['   psnr: original VS clean mean    =',num2str(calcPSNR(im, cleanImMean))]);
 
 pause;
-clear im imSP cleanImMedian cleanImMean maskRad;
+clear;
 close all;
 
 % % b)   
@@ -46,7 +45,7 @@ close all;
 % %     methods. (Either print PSNR or display it in the figure window).
 
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 imGaus = addGaussianNoise(im,30);
 showImage(imGaus);
@@ -61,7 +60,7 @@ disp(['   psnr: original VS clean median =',num2str(calcPSNR(im, cleanImMedian))
 disp(['   psnr: original VS clean mean   =',num2str(calcPSNR(im, cleanImMean))]);
 
 pause;
-clear im imGaus cleanImMedian cleanImMean maskRad;
+clear;
 close all;
 
 % % c)  
@@ -80,7 +79,7 @@ disp('	*mean filter is better than median filter');
 disp('	*mean gives larger PSNR, therefor closer to original pic');
 disp('	*mean gives the best visual result as we can see');
 pause;
-clear im imGaus cleanImMedian cleanImMean maskRad;
+clear;
 close all;
 
 % % d) 
@@ -91,7 +90,7 @@ close all;
 % %     display axis description.
 % % *Print your explanation for the behavior of the graph.
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 imSP = addSPnoise(im,0.4);
 showImage(imSP);
@@ -114,7 +113,7 @@ disp('  less likely, after neighberhood size of 2 we saw a drop of PNSR since ea
 disp('  got heavly influence by further away pixels which are not as relevant.');
 
 pause;
-clear im imSP i PSNRarray cleanIm;
+clear;
 close all;
 
 % % e) 
@@ -126,7 +125,7 @@ close all;
 % %     display axis description.
 % % *Print your explanation for the behavior of the graph.
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 imG = addGaussianNoise(im,60);
 showImage(imG); 
@@ -149,7 +148,7 @@ disp('   the closest neighbours, this advatage drops off when we raise the STD v
 disp('   and give importance to further away neighbours. ');
 
 pause;
-clear im imG i cleanIm PSNRarray;
+clear;
 close all;
 
 % % f)   
@@ -161,7 +160,7 @@ close all;
 % % *Which filtering approach works best for Gaussian noise? 
 % %     Print your answer on screen.
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 for i=1 : 10
     gaussianNoiseImg = addGaussianNoise(im,60);
@@ -176,7 +175,7 @@ showImage(cleanImgmedian);
 disp(['   psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
 
 pause;
-clear im cleanImgmedian cleanImgmean imArray i gaussianNoiseImg;
+clear;
 close all;
 
 % % g)   
@@ -190,7 +189,7 @@ close all;
 
 
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 for i=1 : 10
     saltAndPepperNoiseImg = addSPnoise(im,0.3);
@@ -205,7 +204,7 @@ showImage(cleanImgmedian);
 disp(['   psnr: original VS cleanImageMedian_multi=',num2str(calcPSNR(im, cleanImgmedian))]);
 
 pause;
-clear im cleanImgmedian cleanImgmean imArray i saltAndPepperNoiseImg;
+clear;
 close all;
 
 % % h)  
@@ -216,27 +215,18 @@ close all;
 % %     display axis description.
 % % *Print your explanation for the behavior of the graph.
 
-
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
-%making j imArrays. the first, multiImArray(:,:,:,1) will be an imArray with 1
-%frame, the second,multiImArray(:,:,:,2) 2 frames and so on
-for j=1 : 10
-    for i=1 : j
-        saltAndPepperNoiseImg = addSPnoise(im,0.3);
-        multiImArray(:,:,i,j) = saltAndPepperNoiseImg;
-    %     showImage(saltAndPepperNoiseImg);
-    end 
-end
-
 PSNRarray = zeros(10,1);
+%adding a frame and re-doing cleanImageMedian_multi. saving PNSR value
 for i=1 : 10
-    %1:i - selecting from the array the size of the i'th iteration frames.
-    imArray = multiImArray(:,:,1:i,i);
+    saltAndPepperNoiseImg = addSPnoise(im,0.3);
+    %     showImage(saltAndPepperNoiseImg);
+    imArray(:,:,i) = saltAndPepperNoiseImg;
     cleanIm = cleanImageMedian_multi(imArray);
-%     showImage(cleanIm);
     PSNRarray(i) = calcPSNR(cleanIm,im); 
 end
+
 
 figure
 plot(1:10,PSNRarray);
@@ -250,35 +240,26 @@ disp('   the original pixel value will be the median, the PNSR value will be clo
 disp('   the more frames we have.');
 
 pause;
-clear im imArray j i saltAndPepperNoiseImg multiImArray PSNRarray cleanIm;
+clear;
 close all;
  
-% % i)  
-% % *Plot the PSNR values between original and denoised image as a function of 
-% %     the number of frames in the image array. Use Gaussian noise and use the
-% %     denoising methods which you found to work best for this noise type.
-% % *Use matlab function plot. Use matlab functions title, xlabel and ylabel to
-% %     display axis description.
-% % *Print your explanation for the behavior of the graph.
+% i)  
+% *Plot the PSNR values between original and denoised image as a function of 
+%     the number of frames in the image array. Use Gaussian noise and use the
+%     denoising methods which you found to work best for this noise type.
+% *Use matlab function plot. Use matlab functions title, xlabel and ylabel to
+%     display axis description.
+% *Print your explanation for the behavior of the graph.
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
-%making j imArrays. the first, multiImArray(:,:,:,1) will be an imArray with 1
-%frame, the second,multiImArray(:,:,:,2) 2 frames and so on
-for j=1 : 10
-    for i=1 : j
-    gaussianNoiseImg = addGaussianNoise(im,80);
-    multiImArray(:,:,i,j) = gaussianNoiseImg;
-%     showImage(gaussianNoiseImg);
-    end 
-end
-
 PSNRarray = zeros(10,1);
+%adding a frame and re-doing cleanImageMedian_multi. saving PNSR value
 for i=1 : 10
-    %1:i - selecting from the array the size of the i'th iteration frames.
-    imArray = multiImArray(:,:,1:i,i);
+    gaussianNoiseImg = addGaussianNoise(im,80);
+    %     showImage(saltAndPepperNoiseImg);
+    imArray(:,:,i) = gaussianNoiseImg;
     cleanIm = cleanImageMean_multi(imArray);
-%     showImage(cleanIm);
     PSNRarray(i) = calcPSNR(cleanIm,im); 
 end
 
@@ -294,13 +275,13 @@ disp('   the original pixel value will be the median, the PNSR value will be clo
 disp('   the more frames we have.');
 
 pause;
-clear im imArray j i gaussianNoiseImg multiImArray PSNRarray cleanIm;
+clear;
 close all;
 
 % % j) 
 % % *What happens when you sharpen an image that has S&P noise? 
 
-im = lenaIm;
+im = readImage('lena.tif');
 showImage(im);
 saltAndPepperNoiseImg = addSPnoise(im,0.05);
 showImage(saltAndPepperNoiseImg);
