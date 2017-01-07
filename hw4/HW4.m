@@ -10,4 +10,7 @@ clc;
 
 im = readImage('pillows.tif');
 
+
+
+
 showImage(im);

@@ -25,7 +25,7 @@
 % the source image (img) using Bilinear Interpolation. Pixels that have no source (outside
 % the image) should be painted black (0).
 function newimg = affineImage(img,sourceCoors,targetCoors,newSize)
-    
+    [targetCoors, sourceCoors] = deal(sourceCoors, targetCoors); % BODEK comment
     if(nargin == 3)
         newSize = size(img);
     end
@@ -51,7 +51,8 @@ function newimg = affineImage(img,sourceCoors,targetCoors,newSize)
     [X,Y] = meshgrid(1:c, 1:r);%create clean image in the size of newSize
     O = ones(1,r*c);%vector of ones. pad meshgrid
 
-    sourceCoorsOfNewPicture = inv(A)*[X(:) Y(:) O(:)]';%locate source pixel for each target pixel
+%     sourceCoorsOfNewPicture = inv(A)*[X(:) Y(:) O(:)]';%locate source pixel for each target pixel
+    sourceCoorsOfNewPicture = A*[X(:) Y(:) O(:)]';%locate source pixel for each target pixel -  BODEK comment
     sourceCoorsOfNewPicture = sourceCoorsOfNewPicture(1:2 , :);%remove last line of picture matrix
     
     %interpolate colors
