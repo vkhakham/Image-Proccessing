@@ -2,7 +2,7 @@
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
 %
-function cleanf = cleanWolf (f)
+function cleanIm = cleanWolf (f)
     f = double(f);    
     F = fft2(f);
 
@@ -22,7 +22,7 @@ function cleanf = cleanWolf (f)
 %     3st peak (126,118)
 %     4st peak (132,140)
     
-    F = fftshift(F); %shifting without log
+    F = fftshift(F); %shifting without log()
     
 %     changing peaks to 0
     F(148,98) = 0;
@@ -32,5 +32,5 @@ function cleanf = cleanWolf (f)
     
     F = ifftshift(F);%shifting back
     
-    cleanf = uint8(real(ifft2(F)));%reverse fft and cast to real uint8
+    cleanIm = uint8(real(ifft2(F)));%reverse fft and cast to real uint8
 end

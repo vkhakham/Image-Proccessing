@@ -8,10 +8,17 @@ clear;
 close all;
 clc;
 
-% % wolf cleaning using only fft
-% f = imread('wolf.tif');
-% cleanf1 = cleanWolf(f);
-% imshowpair(f, cleanf1, 'montage');
+% wolf cleaning using only fft
+noisyImg = imread('wolf.tif');
+cleanImg = cleanWolf(noisyImg);
+imshow([noisyImg, cleanImg]);    
+
+% dining room cleaning using hist equalization
+noisyImg = imread('diningroom.tif');%decide bins number!
+cleanImg = cleandiningroom(noisyImg);
+imshow([noisyImg, cleanImg]);   
+
+
 
 
 % im = readImage('pillows.tif');
