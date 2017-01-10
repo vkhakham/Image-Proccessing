@@ -11,12 +11,12 @@ clc;
 % wolf cleaning using only fft
 noisyImg = imread('wolf.tif');
 cleanImg = cleanWolf(noisyImg);
-imshow([noisyImg, cleanImg]);    
+imshow([noisyImg, ones(256,5)*255,cleanImg]);    
 
 % dining room cleaning using hist equalization
 noisyImg = imread('diningroom.tif');%decide bins number!
 cleanImg = cleanDiningRoom(noisyImg);
-imshow([noisyImg, cleanImg]);   
+imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 
 % faces cleaning 
 %   make from 3 faces - 3 frames using affineImage
@@ -24,7 +24,7 @@ imshow([noisyImg, cleanImg]);
 %   restore good frame back to the 3 faces using affineImage
 noisyImg = imread('faces.tif');
 cleanImg = cleanFaces(noisyImg);
-imshow([noisyImg, cleanImg]); 
+imshow([noisyImg, ones(512,5)*255, cleanImg]); 
 
 
 % im = readImage('pillows.tif');
