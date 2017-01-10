@@ -3,10 +3,26 @@
 % Gilad Eini   , id 034744920
 %
 function cleanIm = cleanQr (im)
+    clear;
+    close all;
+    clc;
     im = readImage('QR.tif');
-    showImage(im);
-    im = double(im);
-    maskRad = [1,1];
+    
+% % % %     miniIm = im(1:50,1:50);
+% % % %     showImage(im);
+% % % %     cleanim = binarizeOptAdaptive(miniIm,15);
+% % % %     cleanim = cleanImageMedian(cleanim,[1,1]);
+% % %     maskRad = [1,1];
+% % %     cleanimRightSide = cleanImMinMax(im(:,128:256), 'max', maskRad);
+% % %     cleanimLeftSide  = cleanImMinMax(im(:,1:127)  , 'min', maskRad);
+% % %     cleanim = [cleanimLeftSide cleanimRightSide];
+% % %     
+% % %     miniIm = cleanim(1:50,:);
+% % %     cleanim = binarizeOptAdaptive(miniIm,30);
+% % %     
+% % %     imshowpair(im, cleanim, 'montage');
+% % %     im = double(im);
+% % %     maskRad = [1,1];
 
     max1 = cleanImMinMax(im, 'max',maskRad);
     % showImage(max1);
