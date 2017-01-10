@@ -2,7 +2,7 @@
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
 %
-function cleanImg = cleandiningroom (noisyImg)
+function cleanImg = cleanDiningRoom (noisyImg)
     noisyImg = uint8(noisyImg);
     
     %attempt a - number of differnt gray values bins

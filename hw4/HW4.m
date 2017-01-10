@@ -15,7 +15,7 @@ imshow([noisyImg, cleanImg]);
 
 % dining room cleaning using hist equalization
 noisyImg = imread('diningroom.tif');%decide bins number!
-cleanImg = cleandiningroom(noisyImg);
+cleanImg = cleanDiningRoom(noisyImg);
 imshow([noisyImg, cleanImg]);   
 
 % faces cleaning 
