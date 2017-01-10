@@ -58,4 +58,5 @@ function newimg = affineImage(img,sourceCoors,targetCoors,newSize)
     %interpolate colors
     newimg = interpolate(img, sourceCoorsOfNewPicture);% bilinear interp
     newimg = reshape(newimg, r, c);%getting a vector in the size 1X(RxC) -> reshape to image(r,c)
+    newimg = uint8(newimg);
 end
