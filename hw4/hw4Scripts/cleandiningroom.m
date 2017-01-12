@@ -3,18 +3,12 @@
 % Gilad Eini   , id 034744920
 %
 function cleanImg = cleanDiningRoom (noisyImg)
+    noisyImg = imread('diningroom.tif');
     noisyImg = uint8(noisyImg);
+    cleanImg = uint8(noisyImg.*6);
     
-    %attempt a - number of differnt gray values bins
-    diffrentGrayValues = length(unique(noisyImg(:)));
-    equalizedIm = histeq(noisyImg,diffrentGrayValues);
-    
-    %attempt b - default 64 bins
-%     equalizedIm2 = histeq(noisyImg);
+% diffrentGrayValues = length(unique(noisyImg(:)));
+% equalizedIm = histeq(noisyImg,diffrentGrayValues);   
+% imshow([noisyImg, equalizedIm, newImg]); 
 
-%     imshow([noisyImg, equalizedIm, equalizedIm2]);    
-    cleanImg = uint8(equalizedIm);
 end
-
-%TODO see if ok to use this function hist equalization
-%choose 64bins or unique values bins
