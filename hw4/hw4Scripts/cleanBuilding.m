@@ -10,7 +10,7 @@ function cleanImg = cleanBuilding (noisyImg)
     noisyImg = uint8(noisyImg);
     
     %seems like we need FFT
-
+    bilateralFilt(noisyImg, 3, 50, 20);
 
 
 

@@ -26,8 +26,31 @@ clc;
 % cleanImg = cleanFaces(noisyImg);
 % imshow([noisyImg, ones(512,5)*255, cleanImg]); 
 
+% % cleanHouseFront cleans ???
+% noisyImg = imread('housefront.tif');
+% cleanImg = cleanHouseFront(noisyImg);
+% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 
+% % cleanManyPeople uses gamma correction to clean image.
+% noisyImg = imread('manyPeople.tif');
+% cleanImg = cleanManyPeople(noisyImg);
+% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 
+% % cleanQr uses maxmin(minmax) to remove text then adaptive binarize for white/black.
+% noisyImg = imread('QR.tif');
+% cleanImg = cleanQr(noisyImg);
+% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
+
+% % cleanManyPeople uses gamma correction to clean image.
+% noisyImg = imread('QR.tif');
+% cleanImg = cleanQr(noisyImg);
+% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
+
+% % cleanManyPeople median with a vertical window (6x1) then median with
+% % minMax(maxMin) and maxMin(minMax) photos.
+% noisyImg = imread('pillows.tif');
+% cleanImg = cleanPillows(noisyImg);
+% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 
 
 % im = readImage('pillows.tif');

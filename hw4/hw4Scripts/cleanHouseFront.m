@@ -3,22 +3,20 @@
 % Gilad Eini   , id 034744920
 %
 function cleanImg = cleanHouseFront (noisyImg)
-    clear;
-    close all;
-    clc;
-    f1 = (imread('building.tif'));
-    f2 = (imread('manyPeople.tif'));
-    f3 = (imread('housefront.tif'));
-
-%     doIt(f1);
-%     doIt(f2);
-%     doIt(f3);
-%     doIt2(f1);
-%     doIt2(f2);
-%     doIt2(f3);
-    doIt3(f1);
-    doIt3(f2);
-    doIt3(f3);
+    imF = fft2(noisyImg);
+    %Get the size of the noisy image
+    [rows_image ,columns_image] = size(noisyImg);
+    mask = zeros([10,1]);
+    %Sets the mask
+    mask(:) = 1/10;
+    %Get the FFT of the mask
+    maskF = fft2(mask, rows_image, columns_image);
+    %Divides each pixel in the frequency domain
+    cleanImg = imF./(maskF+0.001);
+    %Do invers FFT to return to clean image
+    cleanImg = ifft2(cleanImg);
+    %Casting to unsigned int 8 bits
+    cleanImg = uint8(real(cleanImg));
 end
 
 function cleanImg = doIt (g)
@@ -63,29 +61,77 @@ function enhanced = doIt2 (im)
     figure, imshow([im ,sep , enhanced]);
 end
 
-function clnIm = doIt3 (NoiseIm)
-    for k=42 : 43
-        imF = fft2(NoiseIm);
-        %Get the size of the noisy image
-        [rows_image ,columns_image] = size(NoiseIm);
-        %Zeros matrix with image size
-        mask = zeros(rows_image,columns_image);
-        %Sets the mask
-        mask(round(rows_image/2)-k:round(rows_image/2)+k,round(rows_image/2)-k:round(rows_image/2)+k)=1/(1+2*k)^2;
-        %Get the FFT of the mask
-        maskF = fft2(mask);
-        %Divides each pixel in the frequency domain
-        clnIm = imF./(maskF+0.001);
-        %Do invers FFT to return to clean image
-        clnIm = ifft2(clnIm);
-        %Casting to unsigned int 8 bits
-        clnIm = uint8(clnIm);
-        [r,~] = size(NoiseIm);
-        sep = ones(r,5)*255;
-        figure, imshow([NoiseIm ,sep , clnIm]);   
-    end
-    close all;
-end
+% function clnIm = doIt3 (NoiseIm)
+%     imF = fft2(NoiseIm);
+%     %Get the size of the noisy image
+%     [rows_image ,columns_image] = size(NoiseIm);
+%     %Zeros matrix with image size
+%     %mask = zeros(size(NoiseIm));
+%     mask = zeros([10,1]);
+%     %Sets the mask
+%     mask(:) = 1/10;
+%     %Get the FFT of the mask
+%     maskF = fft2(mask, rows_image, columns_image);
+%     %Divides each pixel in the frequency domain
+%     clnIm = imF./(maskF+0.001);
+%     %Do invers FFT to return to clean image
+%     clnIm = ifft2(clnIm);
+%     %Casting to unsigned int 8 bits
+%     clnIm = uint8(clnIm);
+%     [r,~] = size(NoiseIm);
+%     sep = ones(r,5)*255;
+%     figure, imshow([NoiseIm ,sep , clnIm]);   
+%     close all;
+% end
+% 
+% function clnIm = doIt4 (NoiseIm)
+%     NoiseIm = double(NoiseIm);
+%     imF = fft2(NoiseIm);
+%     [row, col] = size(NoiseIm);
+%     %Zeros matrix with image size
+% %     mask = zeros(size(NoiseIm));
+%     mask = zeros([1,10]);
+%     %Sets the mask
+%     mask(:) = 1/10;
+%     %Get the FFT of the mask
+%     maskF = fft2(mask, row, col);
+%     %Divides each pixel in the frequency domain
+%     HHtlabda = conj(maskF)*maskF + 0.01;
+%     clnIm = ((conj(maskF)*imF)./(HHtlabda));
+%     %Do invers FFT to return to clean image
+% %     clnIm = ifft2(clnIm);
+%     %Casting to unsigned int 8 bits
+% %     clnIm = uint8(clnIm);
+%     [r,~] = size(NoiseIm);
+%     sep = ones(r,5)*255;
+%     clnIm = uint8(real(ifft2(clnIm)));%reverse fft and cast to real uint8
+%     figure, imshow([NoiseIm ,sep , clnIm]);   
+%     close all;
+%     
+%     [rows_image ,columns_image] = size(NoiseIm);
+%     leftHalf = NoiseIm(:, 1:columns_image/2);
+%     rightHalf = NoiseIm(:, columns_image/2:end);
+%     rightHalf = cleanImageMean(rightHalf, [2,2], 5);
+%     leftImF = fft2(leftHalf);
+%     %Zeros matrix with image size
+%     mask = zeros(rows_image,columns_image/2);
+%     %Sets the mask
+%     mask(1:10) = 1/10;
+%     %Get the FFT of the mask
+%     maskF = fft2(mask);
+%     %Divides each pixel in the frequency domain
+%     clnLeftIm = leftImF./(maskF+0.001);
+%     %Do invers FFT to return to clean image
+%     clnLeftIm = ifft2(clnLeftIm);
+%     %Casting to unsigned int 8 bits
+%     clnLeftIm = uint8(clnLeftIm);
+%     clnIm = horzcat(clnLeftIm,rightHalf);
+% %     [r,~] = size(NoiseIm);
+%     sep = ones(rows_image,5)*255;
+%     figure, imshow([NoiseIm ,sep , clnIm]);   
+%     close all;
+% end
+
 
 
 

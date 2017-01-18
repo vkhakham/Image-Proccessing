@@ -6,7 +6,7 @@ function cleanIm = cleanQr (im)
     clear;
     close all;
     clc;
-    im = readImage('QR.tif');
+    im = imread('QR.tif');
     
 % % % %     miniIm = im(1:50,1:50);
 % % % %     showImage(im);
@@ -22,7 +22,7 @@ function cleanIm = cleanQr (im)
 % % %     
 % % %     imshowpair(im, cleanim, 'montage');
 % % %     im = double(im);
-% % %     maskRad = [1,1];
+    maskRad = [1,1];
 
     max1 = cleanImMinMax(im, 'max',maskRad);
     % showImage(max1);
@@ -31,8 +31,6 @@ function cleanIm = cleanQr (im)
     maxMinMax = cleanImMinMax(minMax1, 'max', maskRad);
     % showImage(maxMinMax);
     minMaxMinMax = cleanImMinMax(maxMinMax, 'min', maskRad);
-    showImage(minMaxMinMax);
-
 
     min1 = cleanImMinMax(minMaxMinMax, 'min',maskRad);
     % showImage(min1);
@@ -41,10 +39,9 @@ function cleanIm = cleanQr (im)
     minMaxMin = cleanImMinMax(maxMin1, 'min', maskRad);
     % showImage(minMaxMin);
     maxMinMaxMin = cleanImMinMax(minMaxMin, 'max', maskRad);
-    showImage(maxMinMaxMin);
 
-    cleanIm = binarizeOptAdaptive(maxMinMaxMin, 100);
-    showImage(cleanIm);
+    cleanIm = binarizeOptAdaptive(maxMinMaxMin, 30);
     
     cleanIm = uint8(cleanIm);
+    imshow(cleanIm);
 end
