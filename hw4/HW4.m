@@ -8,7 +8,7 @@ clear;
 close all;
 clc;
 
-% DONE
+% % DONE
 % % wolf cleaning using only fft
 % % remove 4 peaks on noisyImgF 
 % noisyImg = imread('wolf.tif');
@@ -18,7 +18,7 @@ clc;
 % clear;
 % close all;
 
-% DONE
+% % DONE
 % % dining room cleaning expanding range of gray values
 % % using hist to manipulate gray values
 % noisyImg = imread('diningroom.tif');
@@ -28,7 +28,7 @@ clc;
 % clear;
 % close all;
 
-% DONE
+% % DONE
 % % faces cleaning 
 % %   make from 3 faces - 3 frames using affineImage
 % %   call cleanImageMedian_multi with 3 frames - get 1 good frame
@@ -40,8 +40,9 @@ clc;
 % clear;
 % close all;
 
-% TODO - NOT DONE try weiner
-% % cleanHouseFront cleans ??? 
+% DONE
+% % cleanHouseFront cleans using option1 from lecture
+% % also tring to remove guasian noise on right side
 % noisyImg = imread('housefront.tif');
 % cleanImg = cleanHouseFront(noisyImg);
 % imshow([noisyImg, ones(256,5)*255, cleanImg]);   
@@ -49,7 +50,7 @@ clc;
 % clear;
 % close all;
 
-% TODO - try optimize by adding some of the orig im
+% % Done
 % % cleanManyPeople uses gamma correction to clean image.
 % noisyImg = imread('manyPeople.tif');
 % cleanImg = cleanManyPeople(noisyImg);
@@ -58,8 +59,8 @@ clc;
 % clear;
 % close all;
 
-% TODO - fix edges on minmax like in adaptive
-% % cleanQr uses maxmin(minmax) to remove text then adaptive binarize for white/black.
+% % DONE
+% % cleanQr uses sevral min max to remove text then adaptive binarize for white/black.
 % noisyImg = imread('QR.tif');
 % cleanImg = cleanQr(noisyImg);
 % imshow([noisyImg, ones(256,5)*255, cleanImg]);   
@@ -67,8 +68,8 @@ clc;
 % clear;
 % close all;
 
-% OPT needed
-% % cleanPillows - median with mask[6,0] - look just up and down
+% % Done
+% % cleanPillows - median with mask[6,0] - looks just up and down
 % noisyImg = imread('pillows.tif');
 % cleanImg = cleanPillows(noisyImg);
 % imshow([noisyImg, ones(256,5)*255, cleanImg]); 
@@ -76,7 +77,7 @@ clc;
 % clear;
 % close all;
 
-% TODO - try biliteral fiter
+% % TODO - try biliteral fiter
 % % cleanBuilding - 
 % noisyImg = imread('building.tif');
 % cleanImg = cleanBuilding(noisyImg);
