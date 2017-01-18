@@ -7,7 +7,7 @@ function cleanIm = cleanWolf (f)
     F = fft2(f);
 
     
-%     uncomment to see the fft yourself    
+% %     uncomment to see the fft yourself    
 %     D = log(1+abs(F));%locating peaks using log to make them larger  
 %     D = fftshift(D);%shifting to center
 %     imagesc(D);%display to hand pick the peaks
