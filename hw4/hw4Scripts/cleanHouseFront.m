@@ -3,7 +3,7 @@
 % Gilad Eini   , id 034744920
 %
 function f = cleanHouseFront (g)
-    % Ftag = (H*x G) / (H* x H + lambda)) 
+%     % Ftag = (H*x G) / (H* x H + lambda)) - option prior term
     g = uint8(g);
     h = zeros(size(g));
     h(1:10,1)=1/10;

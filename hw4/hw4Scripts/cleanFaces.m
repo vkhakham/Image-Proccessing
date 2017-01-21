@@ -36,4 +36,3 @@ function cleanImg = cleanFaces (noisyImg)
 
 end
 
-%     imshow([noisyImg, newImgLeft,newImgRight ,newImgDown, cleanImg, temp]);%debugging   
