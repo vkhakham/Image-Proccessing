@@ -13,17 +13,17 @@ clc;
 % % remove 4 peaks on noisyImgF 
 % noisyImg = imread('wolf.tif');
 % cleanImg = cleanWolf(noisyImg);
-% imshow([noisyImg, ones(256,5)*255,cleanImg]);   
+% figure, imshow([noisyImg, ones(256,5)*255,cleanImg]);   
 % pause;
 % clear;
 % close all;
 
 % % DONE
 % % dining room cleaning expanding range of gray values
-% % using hist to manipulate gray values
+% % using hist to manipulate gray values (doing 'histeq')
 % noisyImg = imread('diningroom.tif');
 % cleanImg = cleanDiningRoom(noisyImg);
-% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
+% figure, imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 % pause;
 % clear;
 % close all;
@@ -35,7 +35,7 @@ clc;
 % %   restore good frame back to the 3 faces using affineImage
 % noisyImg = imread('faces.tif');
 % cleanImg = cleanFaces(noisyImg);
-% imshow([noisyImg, ones(512,5)*255, cleanImg]); 
+% figure, imshow([noisyImg, ones(512,5)*255, cleanImg]); 
 % pause;
 % clear;
 % close all;
@@ -45,7 +45,7 @@ clc;
 % % also tring to remove guasian noise on right side
 % noisyImg = imread('housefront.tif');
 % cleanImg = cleanHouseFront(noisyImg);
-% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
+% figure, imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 % pause;
 % clear;
 % close all;
@@ -54,7 +54,7 @@ clc;
 % % cleanManyPeople uses gamma correction to clean image.
 % noisyImg = imread('manyPeople.tif');
 % cleanImg = cleanManyPeople(noisyImg);
-% imshow([noisyImg, ones(256,5)*255, cleanImg]);  
+% figure, imshow([noisyImg, ones(256,5)*255, cleanImg]);  
 % pause;
 % clear;
 % close all;
@@ -63,7 +63,7 @@ clc;
 % % cleanQr uses sevral min max to remove text then adaptive binarize for white/black.
 % noisyImg = imread('QR.tif');
 % cleanImg = cleanQr(noisyImg);
-% imshow([noisyImg, ones(256,5)*255, cleanImg]);   
+% figure, imshow([noisyImg, ones(256,5)*255, cleanImg]);   
 % pause;
 % clear;
 % close all;
@@ -72,16 +72,16 @@ clc;
 % % cleanPillows - median with mask[6,0] - looks just up and down
 % noisyImg = imread('pillows.tif');
 % cleanImg = cleanPillows(noisyImg);
-% imshow([noisyImg, ones(256,5)*255, cleanImg]); 
+% figure, imshow([noisyImg, ones(256,5)*255, cleanImg]); 
 % pause;
 % clear;
 % close all;
 
-% % TODO - try biliteral fiter
-% % cleanBuilding - 
-% noisyImg = imread('building.tif');
-% cleanImg = cleanBuilding(noisyImg);
-% figure, imshow([noisyImg, ones(256,5)*255, cleanImg]); 
+% % Done  
+% % cleanBuilding - biliteral fiter
+noisyImg = imread('building.tif');
+cleanImg = cleanBuilding(noisyImg);
+figure, imshow([noisyImg, ones(255,5)*255, cleanImg]); 
 % pause;
 % clear;
 % close all;
