@@ -54,6 +54,5 @@ function cleanImg = cleanBuilding (noisyImg)
         end
     end
     cleanImg = uint8(cleanImg);
-    figure, imshow([noisyImg,ones(255,5)*255,cleanImg]);
 end
 
