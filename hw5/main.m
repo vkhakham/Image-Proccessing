@@ -16,3 +16,6 @@ printPyr(G);
 
 F = laplacPyr(img, maxLevels);
 printPyr(F);
+
+img = collapseLapPyr(F);
+figure, imshow(img);
