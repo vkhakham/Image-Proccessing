@@ -10,42 +10,55 @@ clc;
 
 img = imread('lena.tif');
 maxLevels = log2(size(img,1))+1;
-% 
-% G = gaussPyr(img, maxLevels);
-% printPyr(G);
-% 
-% F = laplacPyr(img, maxLevels);
-% printPyr(F);
-% 
-% img = collapseLapPyr(F);
-% figure, imshow(img);
 
+%pring gaus pyr
+G = gaussPyr(img, maxLevels);
+printPyr(G);
 
-% img1 = imread('apple-bw.tif');
-% img2 = imread('orange-bw.tif');
-img1 = imread('lena.tif');
-img2 = imread('barbarasmall.tif');
+%pring lap pyr
+F = laplacPyr(img, maxLevels);
+printPyr(F);
+
+%print collapsed lap
+imgCollapse = collapseLapPyr(F);
+figure, imshow(imgCollapse);
+display(isequal(imgCollapse,img));%checking after collapse if is equal (will equal only on full level)
+
+%multi spline
+img1 = imread('apple-bw.tif');
+img1 = img1(:,:,1); %after convertion from RGB, this is what we got 
+img2 = imread('orange-bw.tif');
+img2 = img2(:,:,1); %after convertion from RGB, this is what we got 
+
+%init out mask [1 0] (ones on left and zeros on right
 [r,c] = size(img1);
-mask = zeros(r,c);
-transitionMask = 
-colsMdl = floor(c/2);
-mask(:,colsMdl:c) = 0;
-mask(:,colsMdl-10:colsMdl-9) = 0.9; 
-mask(:,colsMdl-8:colsMdl-7) = 0.8;
-mask(:,colsMdl-6:colsMdl-5) = 0.7;
-mask(:,colsMdl-4:colsMdl-3) = 0.6;
-mask(:,colsMdl-2:colsMdl+1) = 0.5;
-mask(:,colsMdl+2:colsMdl+3) = 0.4;
-mask(:,colsMdl+4:colsMdl+5) = 0.3;
-mask(:,colsMdl+6:colsMdl+7) = 0.2;
-mask(:,colsMdl+8:colsMdl+9) = 0.1;
-a = roipoly(img);
+mask = ones(r,c);
+mask(:,c/2+1 :c) = 0;
+
+%making gaus mask to conv on our mask
+gausMaskSTD = 200;%std of gaus
+xRad = 30;%x radius
+[X,Y] = meshgrid(-xRad:xRad,0:0);
+gaus = exp( - (X.^2) / (2*gausMaskSTD^2) );%formula from class
+gaus = gaus / sum(gaus(:));%normalize to keep the Sum the same
+
+xLayer = xRad+1;
+%pad mask with values - reflection - to convolve with reflective propery
+%instead of zeros
+mask = double(padarray(mask,[xLayer xLayer],'symmetric'));
+mask = conv2(mask, gaus, 'same');
+mask = mask(xLayer+1:end-xLayer, xLayer+1:end-xLayer);
+
+%call multiResSpline
 newImg = multiResSpline(img1, img2, mask, maxLevels);
 figure, imshow([img1,img2,newImg]);   
+title('gaus mask');
+
+mask = ones(r,c);
+mask(:,c/2+1 :c) = 0;
+newImg = multiResSpline(img1, img2, mask, maxLevels);
+figure, imshow([img1,img2,newImg]);   
+title('[1 0] mask');
 
 
-newImgWithNoMask = multiResSpline(img1, img2, mask, maxLevels);
-figure, imshow([img1,img2,newImgWithNoMask]);   
 
-
-%check 251X256 im2.tif
