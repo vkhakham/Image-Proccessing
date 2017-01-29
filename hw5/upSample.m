@@ -29,6 +29,7 @@ function US = upSample(I)
     F = F*4; % we increased pixel count times 4, we should increase the avg also.
     US = uint8(real(ifft2(F))); %reverse fft and cast to real uint8
 %     showImage(US);
+end
     
     
     

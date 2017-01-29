@@ -14,16 +14,13 @@
 % Method:     Starts with img and creates level after level. Uses function downSample. 
 % 
 function    G = gaussPyr(img,levels)
-    img = readImage('lena.tif');
-    levels = log2(size(img,1))+1;
-    
     img = uint8(img);
     G = cell(1,levels);
     G{1} = img;
+    levels = min ( levels , log2(size(img,1))+1);
     if(levels > 1)
         for i=2 : levels
             G{i} = downSample(G{i-1});
         end
     end
-    printPyr(G);
 end
