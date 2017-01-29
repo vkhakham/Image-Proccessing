@@ -17,14 +17,17 @@ function    G = gaussPyr(img,levels)
     img = readImage('lena.tif');
     levels = 4;
     
-    C = cell(1,levels);
-    g = [0.05 0.25 0.4 0.25 0.05];
-    C(1) = img;
-    C(2) = gausMask;
-    gausMask = g'*g;
     img = uint8(img);
-    for i=0 : levels-1
-        disp(int2str(i));
+    C = cell(1,levels);
+    C{1} = img;
+    if(levels > 1)
+        for i=2 : levels
+%             disp(int2str(i));
+%             [r,c] = size(img);
+%             img = img(1:(floor(r/2)), 1:(floor(c/2)));
+%             C{i} = img;
+            C{i} = downSample(C{i-1});
+        end
     end
-    
+    printPyr(C);
 end
