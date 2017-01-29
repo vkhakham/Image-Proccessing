@@ -24,10 +24,12 @@
 % The new image is then reconstructed from the new Pyramid. 
 % Note: 1) The reconstructed image may not have values in 0..255, you must scale or truncate. 
 function newImg = multiResSpline(img1,img2,mask,levels)
-    L1 = laplac(img1, levels);
-    L2 = laplac(img2, levels);
+    L1 = laplacPyr(img1, levels);
+    L2 = laplacPyr(img2, levels);
     L3 = cell(1,levels);
-    for i=1 : levels
+    L3{1} = double(L1{1}).*mask + double(L2{1}).*(1-mask); 
+    for i=2 : levels
+        mask = double(downSample(mask));
         L3{i} = double(L1{i}).*mask + double(L2{i}).*(1-mask); 
     end
     newImg = uint8(collapseLapPyr(L3));
