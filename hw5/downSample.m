@@ -13,9 +13,10 @@
 %               then subsampled. Use matlab function conv2 with parameter "same". 
 function DS = downSample(I)
 %     I = readImage('lena.tif');
+    I = double(I);
     g = [0.05 0.25 0.4 0.25 0.05];
     gausMask = g'*g;
-    blurredIm = conv2(I, g, 'same');
+    blurredIm = conv2(I, gausMask, 'same');
     DS = zeros(size(I)/2);
     for i = 1:size(DS,1)
         for j = 1:size(DS,2)
@@ -23,4 +24,5 @@ function DS = downSample(I)
         end
     end
     DS = uint8(DS);
+end
 %     showImage(DS);

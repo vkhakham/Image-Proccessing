@@ -2,18 +2,13 @@
 % Vadim Khakham, id 311890156
 % Gilad Eini   , id 034744920
 %
-function printPyr(C)
-    img =  C{1};
-    [r,c] = size(img);
-    pyramid = [img zeros(r,floor(c/2)+2)];
-    lastRow = 1;
-    for i = 2 : length(C)
-        img = C{i};
-        [ri,ci] = size(img);
-        pyramid(lastRow:lastRow+ri,c+1+1:c+1+1+ci) = 150;
-        lastRow = lastRow + ri +1+ 1;
+function printPyr(I)
+    m = size(I{1}, 1);
+    newI = I{1};
+    for i = 2 : numel(I)
+        [q,p,~] = size(I{i});
+        I{i} = cat(1,repmat(zeros(1 , p),[m - q , 1]),I{i});
+        newI = cat(2,newI,I{i});
     end
-    
-    
-    imshow(pyramid);
+    imshow(newI)
 end

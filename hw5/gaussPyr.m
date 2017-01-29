@@ -15,19 +15,15 @@
 % 
 function    G = gaussPyr(img,levels)
     img = readImage('lena.tif');
-    levels = 4;
+    levels = log2(size(img,1))+1;
     
     img = uint8(img);
-    C = cell(1,levels);
-    C{1} = img;
+    G = cell(1,levels);
+    G{1} = img;
     if(levels > 1)
         for i=2 : levels
-%             disp(int2str(i));
-%             [r,c] = size(img);
-%             img = img(1:(floor(r/2)), 1:(floor(c/2)));
-%             C{i} = img;
-            C{i} = downSample(C{i-1});
+            G{i} = downSample(G{i-1});
         end
     end
-    printPyr(C);
+    printPyr(G);
 end
