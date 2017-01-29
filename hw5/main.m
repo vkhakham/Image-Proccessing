@@ -8,7 +8,7 @@ clear;
 close all;
 clc;
 
-img = readImage('lena.tif');
+img = imread('lena.tif');
 maxLevels = log2(size(img,1))+1;
 
 G = gaussPyr(img, maxLevels);
@@ -19,3 +19,9 @@ printPyr(F);
 
 img = collapseLapPyr(F);
 figure, imshow(img);
+
+img1 = imread('apple.jpeg');
+img = multiResSpline(img1, img1, img1, maxLevels);
+
+
+%check 251X256 im2.tif
