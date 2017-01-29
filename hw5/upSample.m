@@ -23,18 +23,13 @@ function US = upSample(I)
         f = double(I);    
         F = fft2(f);
         F = fftshift(F);
-        %      pad with zeros
+        % pad with zeros to upscale.
         F = padarray(F,size(F)/2);
-    %     D = log(1+abs(F));%locating peaks using log to make them larger  
-    %     D = fftshift(D);%shifting to center
-    %     imagesc(D);%display to hand pick the peaks
-    %     colormap(gray)%see gray fft
         F = ifftshift(F);
         F = F*4; % we increased pixel count times 4, we should increase the avg also.
-        f = real(ifft2(F));%reverse fft and cast to real
-    %  showImage(US);
+        f = real(ifft2(F)); % reverse fft and cast to real
     end
-    US = uint8(f);
+    US = f;
 end
     
     

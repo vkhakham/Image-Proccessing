@@ -36,8 +36,8 @@ mask = ones(r,c);
 mask(:,c/2+1 :c) = 0;
 
 %making gaus mask to conv on our mask
-gausMaskSTD = 200;%std of gaus
-xRad = 30;%x radius
+gausMaskSTD = 1000;%std of gaus
+xRad = 20;%x radius
 [X,Y] = meshgrid(-xRad:xRad,0:0);
 gaus = exp( - (X.^2) / (2*gausMaskSTD^2) );%formula from class
 gaus = gaus / sum(gaus(:));%normalize to keep the Sum the same

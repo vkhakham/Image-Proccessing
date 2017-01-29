@@ -16,16 +16,16 @@ function DS = downSample(I)
 %     I = double([64,62;55,54]);
     g = [0.05 0.25 0.4 0.25 0.05];
     gausMask = g'*g;
-    xLayer = 2;
-    I = double(padarray(I,[xLayer xLayer],'circular'));    % B is expanded with an extra 2 layers of mirror values
+    xLayer = 20;
+    % I is expanded with an extra 20 layers of mirror values
+    I = double(padarray(I,[xLayer xLayer],'circular'));
     blurredIm = conv2(I, gausMask, 'same');
     blurredIm = blurredIm(xLayer+1:end-xLayer, xLayer+1:end-xLayer);
     DS = zeros(size(blurredIm)/2);
     for i = 1:size(DS,1)
         for j = 1:size(DS,2)
+            % sample 4 pixels to one and average them.
             DS(i,j) = (blurredIm(i*2,j*2) + blurredIm(i*2-1,j*2) + blurredIm(i*2,j*2-1) + blurredIm(i*2-1,j*2-1))/4;
         end
     end
-    DS = uint8(DS);
-    %     showImage(DS);
 end
