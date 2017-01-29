@@ -13,7 +13,7 @@
 % 
 % Method:     Starts with img and creates level after level. Uses function downSample. 
 % 
-function    G = gaussPyr(img,levels)
+function G = gaussPyr(img,levels)
     img = uint8(img);
     G = cell(1,levels);
     G{1} = img;
