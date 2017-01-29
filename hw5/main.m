@@ -8,19 +8,21 @@ clear;
 close all;
 clc;
 
-img = imread('lena.tif');
-maxLevels = log2(size(img,1))+1;
+% img = imread('lena.tif');
+% maxLevels = log2(size(img,1))+1;
+% 
+% G = gaussPyr(img, maxLevels);
+% printPyr(G);
+% 
+% F = laplacPyr(img, maxLevels);
+% printPyr(F);
+% 
+% img = collapseLapPyr(F);
+% figure, imshow(img);
 
-G = gaussPyr(img, maxLevels);
-printPyr(G);
-
-F = laplacPyr(img, maxLevels);
-printPyr(F);
-
-img = collapseLapPyr(F);
-figure, imshow(img);
-
-img1 = imread('apple.jpeg');
+img1 = imread('lena.tif');
+img2 = imread('barbarasmall.tif');
+figure, imshow([img1,img2]);   
 img = multiResSpline(img1, img1, img1, maxLevels);
 
 
