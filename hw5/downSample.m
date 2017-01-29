@@ -13,16 +13,19 @@
 %               then subsampled. Use matlab function conv2 with parameter "same". 
 function DS = downSample(I)
 %     I = readImage('lena.tif');
-    I = double(I);
+%     I = double([64,62;55,54]);
     g = [0.05 0.25 0.4 0.25 0.05];
     gausMask = g'*g;
+    xLayer = 2;
+    I = padarray(I,[xLayer xLayer],'circular');    % B is expanded with an extra 2 layers of mirror values
     blurredIm = conv2(I, gausMask, 'same');
-    DS = zeros(size(I)/2);
+    blurredIm = blurredIm(xLayer+1:end-xLayer, xLayer+1:end-xLayer);
+    DS = zeros(size(blurredIm)/2);
     for i = 1:size(DS,1)
         for j = 1:size(DS,2)
             DS(i,j) = (blurredIm(i*2,j*2) + blurredIm(i*2-1,j*2) + blurredIm(i*2,j*2-1) + blurredIm(i*2-1,j*2-1))/4;
         end
     end
     DS = uint8(DS);
+    %     showImage(DS);
 end
-%     showImage(DS);
