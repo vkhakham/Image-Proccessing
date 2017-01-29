@@ -15,7 +15,7 @@
 % Or using gaussPyr and upSample. 
 % 
 function L = laplacPyr(img,levels)
-    G = gaussPyr(img,levels+1);
+    G = gaussPyr(img,levels+1);%make gausian + 1. no problem if full was asked.
     L = cell(1,levels);
     maxLevels = log2(size(img,1))+1;
     for i=1 : levels

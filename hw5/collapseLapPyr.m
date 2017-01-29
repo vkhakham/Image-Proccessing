@@ -17,6 +17,7 @@
 %
 function img = collapseLapPyr(L)
     for i=length(L) :-1: 2
+        %collapse- each level will contain the upper levels of the pyramid
          L{i-1} =  double(upSample(L{i})) + double(L{i-1}); 
     end
     img = uint8(L{1});

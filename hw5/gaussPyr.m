@@ -16,7 +16,7 @@
 function G = gaussPyr(img,levels)
     img = uint8(img);
     G = cell(1,levels);
-    G{1} = img;
+    G{1} = img;%first level is the image
     levels = min ( levels , log2(size(img,1))+1);
     if(levels > 1)
         for i=2 : levels
