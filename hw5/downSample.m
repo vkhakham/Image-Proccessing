@@ -12,8 +12,6 @@
 % Method:  The input image is blurred using a gaussian mask (use the one given in class) and 
 %               then subsampled. Use matlab function conv2 with parameter "same". 
 function DS = downSample(I)
-%     I = readImage('lena.tif');
-%     I = double([64,62;55,54]);
     g = [0.05 0.25 0.4 0.25 0.05];
     gausMask = g'*g;
     xLayer = 20;

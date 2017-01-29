@@ -10,5 +10,5 @@ function printPyr(I)
         I{i} = cat(1,repmat(zeros(1 , p),[m - q , 1]),I{i});
         newI = cat(2,newI,I{i});
     end
-    figure, imshow(newI);
+    figure, imshow(newI,[0,255]);
 end
