@@ -16,19 +16,25 @@
 %            a simple blur mask e.g. the mask used in downSample). 
 %            Or pad the FFT2 of the image with zeros and then IFFT2.
 function US = upSample(I)
-    f = double(I);    
-    F = fft2(f);
-    F = fftshift(F);
-    %      pad with zeros
-    F = padarray(F,size(F)/2);
-%     D = log(1+abs(F));%locating peaks using log to make them larger  
-%     D = fftshift(D);%shifting to center
-%     imagesc(D);%display to hand pick the peaks
-%     colormap(gray)%see gray fft
-    F = ifftshift(F);
-    F = F*4; % we increased pixel count times 4, we should increase the avg also.
-    US = uint8(real(ifft2(F))); %reverse fft and cast to real uint8
-%     showImage(US);
+    if (size(I,1) == 1)
+        dc = double(I(1,1));
+        f = ones(2,2).*dc;
+    else
+        f = double(I);    
+        F = fft2(f);
+        F = fftshift(F);
+        %      pad with zeros
+        F = padarray(F,size(F)/2);
+    %     D = log(1+abs(F));%locating peaks using log to make them larger  
+    %     D = fftshift(D);%shifting to center
+    %     imagesc(D);%display to hand pick the peaks
+    %     colormap(gray)%see gray fft
+        F = ifftshift(F);
+        F = F*4; % we increased pixel count times 4, we should increase the avg also.
+        f = real(ifft2(F));%reverse fft and cast to real
+    %  showImage(US);
+    end
+    US = uint8(f);
 end
     
     
